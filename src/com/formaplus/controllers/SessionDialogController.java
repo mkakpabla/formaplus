@@ -24,7 +24,6 @@ import com.formaplus.utils.AlertMessage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.scene.control.DatePicker;
 
 import javafx.scene.control.TableView;
@@ -59,33 +58,50 @@ public class SessionDialogController extends Controller implements Initializable
 	@NotEmpty(message="le libellé de la session n'est pas valide")
 	
 	private TextField libFormaField;
+	
+	private int idSession = 0;
 
 	// Event Listener on Button[#saveButton].onAction
 	@FXML
 	public void handleSaveButtonAction(ActionEvent event) {
-		ObservableList<Formation> selectedFormations = FXCollections.observableArrayList();
-		for(Formation forma: formationsTable.getItems()) {
-			if(forma.getCheckBoxFormation().isSelected()) {
-				selectedFormations.add(forma);
-			}
-		}
-		if(this.validate()) {
-			if(!selectedFormations.isEmpty()) {
-				if(endDateField.getValue().isAfter(startDateField.getValue())){
-					Session session = new Session();
-					session.setDateDebut(startDateField.getValue());
-					session.setDateFin(endDateField.getValue());
-					session.setLibSession(libFormaField.getText());
-					session.setFormations(selectedFormations);
-					new SessionRepository().Save(session);
-				} else {
-					AlertMessage.showWarning("la date de fin ne peut être inférieur à la date de début");
-				}
+		if(this.idSession != 0) {
+			if(endDateField.getValue().isAfter(startDateField.getValue())){
+				Session session = new Session();
+				session.setDateDebut(startDateField.getValue());
+				session.setDateFin(endDateField.getValue());
+				session.setLibSession(libFormaField.getText());
+				session.setIdSession(this.idSession);
+				RepositoryFactory.getSessionRepository().update(session);
+				AlertMessage.showInformation("Les informations de la session ont été mis jour");
 			} else {
-				AlertMessage.showWarning("Veillez selectionner les formations de la session");
-				
+				AlertMessage.showWarning("la date de fin ne peut être inférieur à la date de début");
+			}
+		} else {
+			ObservableList<Formation> selectedFormations = FXCollections.observableArrayList();
+			for(Formation forma: formationsTable.getItems()) {
+				if(forma.getCheckBoxFormation().isSelected()) {
+					selectedFormations.add(forma);
+				}
+			}
+			if(this.validate()) {
+				if(!selectedFormations.isEmpty()) {
+					if(endDateField.getValue().isAfter(startDateField.getValue())){
+						Session session = new Session();
+						session.setDateDebut(startDateField.getValue());
+						session.setDateFin(endDateField.getValue());
+						session.setLibSession(libFormaField.getText());
+						session.setFormations(selectedFormations);
+						new SessionRepository().Save(session);
+					} else {
+						AlertMessage.showWarning("la date de fin ne peut être inférieur à la date de début");
+					}
+				} else {
+					AlertMessage.showWarning("Veillez selectionner les formations de la session");
+					
+				}
 			}
 		}
+		
 	}
 
 	@Override
@@ -101,31 +117,51 @@ public class SessionDialogController extends Controller implements Initializable
 		libFormaField.setText(s.getLibSession());
 		startDateField.setValue(s.getDateDebut());
 		endDateField.setValue(s.getDateFin());
+		this.idSession = s.getIdSession();
 		ObservableList<Formation> formationsList = FXCollections.observableArrayList(RepositoryFactory.getFormationRepository().GetAll());
 		
 		for(Formation f: formationsList) {
 			for(Formation sf: s.getFormations()) {
 				if(f.getIdFormation() == sf.getIdFormation()) {
-					// formationsList.add(sf);
 					CheckBox checkBox = new CheckBox(f.getLibFormation());
 					checkBox.setSelected(true);
 					f.setCheckBoxFormation(checkBox);
 				} 
 			}
 			f.getCheckBoxFormation().setOnAction((ActionEvent event) -> {
-				CheckBox cbx = (CheckBox)event.getSource();
-				if(cbx.isSelected()) {
-					
-				} else {
-					boolean ok = RepositoryFactory.getSessionRepository().RemoveFormation(s.getIdSession(), f.getIdFormation());
-					if(ok) {
-						AlertMessage.showInformation("Cette formation a été supprimer de la session");
-						
-					}
-					System.out.println("Décoché" + f.getIdFormation());
-				}
+				this.updateOrDeleteFormation(event, s, f);
 			});
 		}
 		formationsTable.setItems(formationsList);
+	}
+	
+	private void updateOrDeleteFormation(ActionEvent event, Session s, Formation f) {
+		CheckBox cbx = (CheckBox)event.getSource();
+		SessionRepository sessionRepo = RepositoryFactory.getSessionRepository();
+		if(cbx.isSelected()) {
+			if(AlertMessage.showConfirm("Voulez vous vraiment ajouter cette formation de cette session ?")) {
+				if(sessionRepo.insertFormation(s.getIdSession(), f.getIdFormation())) {
+					AlertMessage.showInformation("Cette formation a été ajouter à la session");
+				}
+			} else {
+				cbx.setSelected(false);
+			}
+		} else {
+			
+			if(AlertMessage.showConfirm("Voulez vous vraiment supprimer cette formation de cette session ?")) {
+				if(sessionRepo.hasInscription(s.getIdSession(), f.getIdFormation())) {
+					if(sessionRepo.removeFormation(s.getIdSession(), f.getIdFormation())) {
+						AlertMessage.showInformation("Cette formation a été supprimer de la session");
+					} else {
+						cbx.setSelected(true);
+					}
+				} else {
+					AlertMessage.showInformation("Vous ne pouvez supprimmer cette formation de cette session");
+					cbx.setSelected(true);
+				}
+			} else {
+				cbx.setSelected(true);
+			}
+		}
 	}
 }

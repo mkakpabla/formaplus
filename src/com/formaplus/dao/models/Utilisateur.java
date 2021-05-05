@@ -1,7 +1,6 @@
 package com.formaplus.dao.models;
 
 
-
 public class Utilisateur {
 	
 	private int idUtr;
@@ -9,6 +8,8 @@ public class Utilisateur {
 	private String nomCompUtr;
 	private String loginUtr;
 	private String mdpUtr;
+	private String roleUtr;
+	
 	
 	
 	
@@ -36,7 +37,12 @@ public class Utilisateur {
 	public void setMdpUtr(String mdpUtr) {
 		this.mdpUtr = mdpUtr;
 	}
-	
+	public String getRoleUtr() {
+		return roleUtr;
+	}
+	public void setRoleUtr(String roleUtr) {
+		this.roleUtr = roleUtr;
+	}
 	
 	
 

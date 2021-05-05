@@ -3,8 +3,8 @@ package com.formaplus.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 
 import com.formaplus.dao.models.Formation;
 import com.formaplus.dao.repositories.FormationRepository;
+import com.formaplus.dao.repositories.RepositoryFactory;
 import com.formaplus.utils.AlertMessage;
 import com.formaplus.utils.LoadView;
 
@@ -72,12 +73,13 @@ public class FormationsController implements Initializable {
 	public void handleDeleteButtonAction(ActionEvent event) {
 		Formation formation =  formationsTable.getSelectionModel().getSelectedItem();
 		if(formation != null) {
-			ButtonType result = AlertMessage.showConfirm("Suppression", "Voulez vous vraimment supprimer cette formation ? Cette peut entraîner des opération iréversible.");
-			if(result == ButtonType.OK) {
-				if(repository.Delete(formation.getIdFormation())) {
-					AlertMessage.showInformation("Formation supprimée");
-					this.loadFormations();
-				}
+			if(AlertMessage.showConfirm("Voulez vous vraimment supprimer cette formation ?")) {
+				if(!RepositoryFactory.getFormationRepository().hasInscription(formation.getIdFormation())) {
+					if(repository.Delete(formation.getIdFormation())) {
+						AlertMessage.showInformation("La formation a été supprimée");
+						this.loadFormations();
+					}
+				} else AlertMessage.showInformation("Vous ne pouvez pas supprimer cette formation");
 			}
 			
 		} else {
@@ -85,6 +87,16 @@ public class FormationsController implements Initializable {
 		}
 		
 	}
+	
+	
+	@FXML
+    public void handelSearch(KeyEvent event) {
+		if(!searchField.getText().equals("")) {
+			formationsTable.setItems(FXCollections.observableArrayList(RepositoryFactory.getFormationRepository().search(searchField.getText())));
+		} else this.loadFormations();
+    }
+	
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		this.idFormationColumn.setCellValueFactory(cellData -> cellData.getValue().idFormationProperty().asObject());

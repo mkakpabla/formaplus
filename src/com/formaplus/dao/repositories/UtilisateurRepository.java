@@ -4,11 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.formaplus.dao.models.Utilisateur;
 import com.formaplus.utils.Db;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class UtilisateurRepository implements IRepository<Utilisateur> {
 	
@@ -31,6 +35,29 @@ public class UtilisateurRepository implements IRepository<Utilisateur> {
 				u.setNomCompUtr(resultSet.getString("nom_comp_utr"));
 				u.setLoginUtr(resultSet.getString("login_utr"));
 				u.setMdpUtr(resultSet.getString("mdp_utr"));
+				u.setRoleUtr(resultSet.getString("role_utr"));
+				listeUtilisateurs.add(u);
+			}
+			return listeUtilisateurs;
+		} catch (SQLException e) {
+			System.err.println(e);
+			return listeUtilisateurs;
+		}
+		
+	}
+	
+	public ObservableList<Utilisateur> search(String key) {
+		ObservableList<Utilisateur> listeUtilisateurs = FXCollections.observableArrayList();
+		
+		try(Statement stm = connection.createStatement(); ResultSet resultSet = stm.executeQuery("SELECT * FROM utilisateurs WHERE nom_comp_utr LIKE '%" + key +"%' OR role_utr LIKE '%" + key +"%'")) {
+			Utilisateur u;
+			while (resultSet.next()) {
+				u = new Utilisateur();
+				u.setIdUtr(resultSet.getInt(1));
+				u.setNomCompUtr(resultSet.getString("nom_comp_utr"));
+				u.setLoginUtr(resultSet.getString("login_utr"));
+				u.setMdpUtr(resultSet.getString("mdp_utr"));
+				u.setRoleUtr(resultSet.getString("role_utr"));
 				listeUtilisateurs.add(u);
 			}
 			return listeUtilisateurs;
@@ -51,6 +78,7 @@ public class UtilisateurRepository implements IRepository<Utilisateur> {
 			u.setNomCompUtr(resultSet.getString("nom_comp_utr"));
 			u.setLoginUtr(resultSet.getString("login_utr"));
 			u.setMdpUtr(resultSet.getString("mdp_utr"));
+			u.setRoleUtr(resultSet.getString("role_utr"));
 			return u;
 		} catch (SQLException e) {
 			System.err.println(e);
@@ -63,21 +91,23 @@ public class UtilisateurRepository implements IRepository<Utilisateur> {
 	public boolean Save(Utilisateur obj) {
 		// TODO Auto-generated method stub
 		if(obj.getIdUtr() == 0) {
-			try(PreparedStatement pstm = connection.prepareStatement("INSERT INTO utilisateurs(nom_comp_utr,login_utr, mdp_utr) VALUES(?,?,?)")) {
+			try(PreparedStatement pstm = connection.prepareStatement("INSERT INTO utilisateurs(nom_comp_utr,login_utr, mdp_utr, role_utr) VALUES(?,?,?,?)")) {
 				pstm.setString(1, obj.getNomCompUtr());
 				pstm.setString(2, obj.getLoginUtr());
 				pstm.setString(3, obj.getMdpUtr());
+				pstm.setString(4, obj.getRoleUtr());
 				return pstm.executeUpdate() > 0;
 			} catch (Exception e) {
 				
 				e.printStackTrace();
 			}
 		} else {
-			try(PreparedStatement pstm = connection.prepareStatement("UPDATE utilisateurs SET nom_comp_utr = ?, login_utr = ?, mdp_utr = ? WHERE id_utr = ?")) {
+			try(PreparedStatement pstm = connection.prepareStatement("UPDATE utilisateurs SET nom_comp_utr = ?, login_utr = ?, mdp_utr = ?, role_utr = ? WHERE id_utr = ?")) {
 				pstm.setString(1, obj.getNomCompUtr());
 				pstm.setString(2, obj.getLoginUtr());
 				pstm.setString(3, obj.getMdpUtr());
-				pstm.setInt(4, obj.getIdUtr());
+				pstm.setString(4, obj.getRoleUtr());
+				pstm.setInt(5, obj.getIdUtr());
 				return pstm.executeUpdate() > 0;
 			} catch (Exception e) {
 				

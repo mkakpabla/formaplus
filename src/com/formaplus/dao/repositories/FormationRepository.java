@@ -44,6 +44,26 @@ public class FormationRepository implements IRepository<Formation> {
 		return formations;
 	}
 	
+	public List<Formation> search(String key) {
+		List<Formation> formations = new ArrayList<Formation>();
+		try(PreparedStatement stm = connection.prepareStatement("SELECT * FROM formations WHERE lib_forma LIKE '%"+ key +"%'"); ResultSet result = stm.executeQuery()) {
+			while (result.next()) {
+				Formation formation = new Formation();
+				CheckBox checkBox = new CheckBox(result.getString("lib_forma"));
+				checkBox.setSelected(false);
+				formation.setIdFormation(result.getInt("id_forma"));
+				formation.setLibFormation(result.getString("lib_forma"));
+				formation.setDureeFormation(result.getInt("duree_forma"));
+				formation.setPrixFormation(result.getDouble("prix_forma"));
+				formation.setCheckBoxFormation(checkBox);
+				formations.add(formation);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return formations;
+	}
+	
 	public ObservableList<Formation> GetAllWhereSessionId(int sessionId) {
 		ObservableList<Formation> formations = FXCollections.observableArrayList();
 		try(PreparedStatement stm = connection.prepareStatement("SELECT * FROM formation_session, formations, sessions WHERE formation_session.id_forma = formations.id_forma and formation_session.id_session = sessions.id_session and formation_session.id_session = ?")) {
@@ -145,5 +165,18 @@ public class FormationRepository implements IRepository<Formation> {
 		}
 		return false;
 	}
+	
+	public boolean hasInscription(int idFormation) {
+		try(PreparedStatement pstm = connection.prepareStatement("SELECT * FROM inscriptions WHERE id_forma = ?")) {
+			pstm.setInt(1, idFormation);
+			return pstm.executeQuery().next();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	
 
 }

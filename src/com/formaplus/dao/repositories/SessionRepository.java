@@ -50,7 +50,7 @@ private Connection connection;
 	}
 	
 	
-	public boolean RemoveFormation(int idSession, int idFormation) {
+	public boolean removeFormation(int idSession, int idFormation) {
 		try(PreparedStatement pstm = connection.prepareStatement("DELETE FROM formation_session WHERE id_forma = ? AND id_session = ?")) {
 			pstm.setInt(1, idFormation);
 			pstm.setInt(2, idSession);
@@ -60,8 +60,57 @@ private Connection connection;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
-			
 		}
+	}
+	
+	public boolean hasInscription(int id) {
+		try(PreparedStatement pstm = connection.prepareStatement("SELECT * FROM inscriptions WHERE id_session = ?")) {
+			pstm.setInt(1, id);
+			return pstm.executeQuery().next();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean insertFormation(int idSession, int idFormation) {
+		try(PreparedStatement ps2 = connection.prepareStatement("INSERT INTO formation_session(id_forma, id_session) VALUES(?,?)")) {
+			ps2.setInt(1, idFormation);
+			ps2.setInt(2, idSession);
+			ps2.execute();
+			return true;
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean hasInscription(int idSession, int idFormation) {
+		try(PreparedStatement pstm = connection.prepareStatement("SELECT * FROM inscriptions WHERE id_session = ? AND id_forma = ?")) {
+			pstm.setInt(1, idSession);
+			pstm.setInt(2, idFormation);
+			return pstm.executeQuery().next();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean update(Session obj) {
+		try(PreparedStatement pstm = connection.prepareStatement("UPDATE sessions SET lib_session = ?, date_debut = ?, date_fin = ? WHERE id_session = ?")) {
+			pstm.setString(1, obj.getLibSession());
+			pstm.setString(2, obj.getDateDebut().toString());
+			pstm.setString(3, obj.getDateFin().toString());
+			pstm.setInt(4, obj.getIdSession());
+			return pstm.executeUpdate() > 0;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	@Override
@@ -96,7 +145,13 @@ private Connection connection;
 
 	@Override
 	public boolean Delete(int id) {
-		// TODO Auto-generated method stub
+		try(PreparedStatement pstm = connection.prepareStatement("DELETE FROM sessions WHERE id_session = ?")) {
+			pstm.setInt(1, id);
+			return pstm.executeUpdate() > 0;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
 

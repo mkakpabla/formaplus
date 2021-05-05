@@ -42,13 +42,17 @@
                 <TableColumn fx:id="tblClnName" prefWidth="150.0" text="Nom Complet" />
                 <TableColumn fx:id="tblClnLogin" minWidth="0.0" prefWidth="199.0" text="Identifient" />
                   <TableColumn fx:id="tblClnPassword" minWidth="0.0" prefWidth="199.0" text="Mot de passe" visible="false" />
+                  <TableColumn fx:id="columnRole" editable="false" minWidth="0.0" prefWidth="199.0" sortable="false" text="Role" />
               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
             </TableView>
             <Button fx:id="btnNew" layoutX="619.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleNewUtilisateur" prefHeight="25.0" prefWidth="91.0" text="Nouveau" AnchorPane.rightAnchor="22.0" />
             <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="25.0" spacing="10.0">
                <children>
                   <Label text="Recherche" />
-                  <TextField fx:id="txtSearch" onInputMethodTextChanged="#handleSearch" prefHeight="25.0" prefWidth="264.0" />
+                  <TextField fx:id="txtSearch" onKeyReleased="#handleSearch" prefHeight="25.0" prefWidth="264.0" />
                </children>
             </HBox>
             <HBox layoutX="14.0" layoutY="386.0" spacing="10.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0">

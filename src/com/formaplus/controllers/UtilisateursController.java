@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.formaplus.dao.models.Utilisateur;
+import com.formaplus.dao.repositories.RepositoryFactory;
 import com.formaplus.dao.repositories.UtilisateurRepository;
 import com.formaplus.utils.AlertMessage;
 import com.formaplus.utils.LoadView;
@@ -23,7 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.scene.input.InputMethodEvent;
-
+import javafx.scene.input.KeyEvent;
 import javafx.scene.control.TableView;
 
 import javafx.scene.control.TableColumn;
@@ -40,6 +41,9 @@ public class UtilisateursController  implements Initializable {
 	
 	@FXML
     private TableColumn<Utilisateur, String> tblClnPassword;
+	
+	@FXML
+	private TableColumn<Utilisateur, String> columnRole;
 	
 	@FXML
 	private Button btnNew;
@@ -75,8 +79,12 @@ public class UtilisateursController  implements Initializable {
 	}
 	// Event Listener on TextField[#txtSearch].onInputMethodTextChanged
 	@FXML
-	public void handleSearch(InputMethodEvent event) {
-		
+	public void handleSearch(KeyEvent  event) {
+		if(!txtSearch.getText().equals("")) {
+			tblListeUtilisateurs.setItems(RepositoryFactory.getUtilisateurRepository().search(txtSearch.getText()));
+		} else {
+			this.loadData();
+		}
 	}
 	
 	@FXML
@@ -117,6 +125,7 @@ public class UtilisateursController  implements Initializable {
 		tblClnLogin.setCellValueFactory(new PropertyValueFactory<>("loginUtr"));
 		tblClnName.setCellValueFactory(new PropertyValueFactory<>("nomCompUtr"));
 		tblClnPassword.setCellValueFactory(new PropertyValueFactory<>("mdpUtr"));
+		columnRole.setCellValueFactory(new PropertyValueFactory<>("roleUtr"));
 		//tblClnName.setCellValueFactory(cellData -> cellData.getValue().getNomCompUtr());
 		/*
 		Task<Object> task = new Task<Object>() {

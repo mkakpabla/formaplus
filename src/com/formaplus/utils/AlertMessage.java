@@ -46,6 +46,18 @@ public class AlertMessage {
 		return alert.showAndWait().get();
 	}
 	
+	public static boolean showConfirm(String message) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Confirmation");
+		alert.setHeaderText("Confirmation");
+		alert.setContentText(message);
+		ButtonType result = alert.showAndWait().get();
+		if(result == ButtonType.OK) {
+			return true;
+		}
+		return false;
+	}
+	
 	
 	
 	
