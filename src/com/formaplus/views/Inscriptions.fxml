@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="borderPane" prefHeight="445.0" prefWidth="732.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.formaplus.controllers.InscriptionsController">
+   <top>
+      <HBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="732.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/images/student_male_120px.png" />
+               </image>
+            </ImageView>
+            <Label text="Inscriptions" textFill="#2262ce">
+               <font>
+                  <Font name="Century Gothic Bold" size="24.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets left="15.0" />
+         </padding>
+      </HBox>
+   </top>
+   <center>
+      <AnchorPane fx:id="mainAnchorePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+         <children>
+            <TableView fx:id="inscTable" layoutX="14.0" layoutY="52.0" prefHeight="282.0" prefWidth="705.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="52.0">
+              <columns>
+                  <TableColumn fx:id="idInscColumn" prefWidth="75.0" text="Id" visible="false" />
+                <TableColumn fx:id="etudiantColumn" prefWidth="75.0" text="Etudiant" />
+                <TableColumn fx:id="formationColumn" prefWidth="75.0" text="Formation" />
+                  <TableColumn fx:id="dateInscColumn" prefWidth="75.0" text="Date de l'inscription" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <HBox layoutX="14.0" layoutY="346.0" prefHeight="30.0" prefWidth="402.0" spacing="10.0" AnchorPane.bottomAnchor="13.0">
+               <children>
+                  <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEditButtonAction" prefHeight="25.0" prefWidth="101.0" text="Modifier" />
+                  <Button fx:id="deleteButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleDeleteButtonAction" prefHeight="25.0" prefWidth="101.0" text="Supprimer" />
+                  <Button fx:id="printButton" layoutX="111.0" layoutY="10.0" mnemonicParsing="false" onAction="#handlePrintButtonAction" prefHeight="25.0" prefWidth="101.0" text="Imprimer" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="21.0" spacing="10.0">
+               <children>
+                  <Label text="Recherche" />
+                  <TextField fx:id="searchField" prefHeight="25.0" prefWidth="265.0" />
+               </children>
+            </HBox>
+            <Button fx:id="newInscButton" layoutX="601.0" layoutY="21.0" mnemonicParsing="false" onAction="#handlenewInscButtonAction" text="Nouvelle Incription" AnchorPane.rightAnchor="14.0" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
