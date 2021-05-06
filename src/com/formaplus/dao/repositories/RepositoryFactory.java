@@ -9,6 +9,7 @@ public class RepositoryFactory {
 	private static FormationRepository formationRepository = null;
 	private static SessionRepository sessionRepository = null;
 	private static UtilisateurRepository utilisateurRepository = null;
+	private static InscriptionRepository inscriptionRepository = null;
 	
 	
 	public static EtudiantRepository getEtudiantRepository()
@@ -46,6 +47,13 @@ public class RepositoryFactory {
 			utilisateurRepository = new UtilisateurRepository();
 		}
 		return utilisateurRepository;
+	}
+	
+	public static InscriptionRepository getInscriptionRepository() {
+		if(inscriptionRepository == null) {
+			inscriptionRepository = new InscriptionRepository();
+		}
+		return inscriptionRepository;
 	}
 
 }

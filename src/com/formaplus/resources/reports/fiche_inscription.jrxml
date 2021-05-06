@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fiche_inscription" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3480981b-19a2-4ecd-af0e-0503072ae8ce">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="741" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="30" width="555" height="45" uuid="7ebcd046-0b50-4150-96f9-fe37b12ad03a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="27"/>
+				</textElement>
+				<text><![CDATA[FICHE D'INSCRIPTION]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="110" width="555" height="200" uuid="14f7df55-84b8-4a98-b3d6-e647b4c866af"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="430" width="555" height="45" uuid="066d50f5-f4b0-4085-bf44-0d0e02d47ac6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="27"/>
+				</textElement>
+				<text><![CDATA[FICHE D'INSCRIPTION]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="520" width="555" height="200" uuid="4180b8ec-3ee7-43d7-baec-55d71c5c35a6"/>
+			</rectangle>
+		</band>
+	</detail>
+</jasperReport>

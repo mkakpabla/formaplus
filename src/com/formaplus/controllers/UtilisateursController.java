@@ -15,6 +15,7 @@ import com.formaplus.dao.repositories.RepositoryFactory;
 import com.formaplus.dao.repositories.UtilisateurRepository;
 import com.formaplus.utils.AlertMessage;
 import com.formaplus.utils.LoadView;
+import com.formaplus.utils.Reporting;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -23,7 +24,6 @@ import javafx.event.ActionEvent;
 
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.TableView;
 
@@ -53,6 +53,9 @@ public class UtilisateursController  implements Initializable {
 	private Button btnModifier;
 	@FXML
 	private Button btnSupprimer;
+	
+	@FXML
+    private Button printButton;
 	
 	private ObservableList<Utilisateur> uListe;
 	
@@ -90,6 +93,7 @@ public class UtilisateursController  implements Initializable {
 	@FXML
     public void handleSupprimerUtilisateur(ActionEvent event) {
 		Utilisateur u = tblListeUtilisateurs.getSelectionModel().getSelectedItem();
+		
 		if(u != null) {
 			ButtonType result = AlertMessage.showConfirm("Suppression", "Voulez vous vraimment supprimer l'utilisateur");
 			if(result == ButtonType.OK) {
@@ -113,6 +117,11 @@ public class UtilisateursController  implements Initializable {
 			AlertMessage.showInformation("Information", "Veillez selectionner un utilisateur");
 		}
 		
+    }
+	
+	@FXML
+    public void handlePrintButton(ActionEvent event) {
+		Reporting.showReport("UsersList", "list_users", tblListeUtilisateurs.getItems());
     }
 	
 	public void loadData() {

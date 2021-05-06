@@ -3,7 +3,6 @@ package com.formaplus.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -64,12 +63,17 @@ public class EtudiantsController implements Initializable {
 		EtudiantRepository etudiantRepository = RepositoryFactory.getEtudiantRepository();
 		Etudiant etudiant = etudiantsTable.getSelectionModel().getSelectedItem();
 		if(etudiant != null) {
-			ButtonType result = AlertMessage.showConfirm("Suppression", "Voulez vous vraimment supprimer cet étudiant ? Cette peut entraîner des opération iréversible.");
-			if(result == ButtonType.OK) {
-				if(etudiantRepository.Delete(etudiant.getIdEtu())) {
-					AlertMessage.showInformation("L'étudiant à été supprimer");
-					this.loadEtudiants();
+			if(AlertMessage.showConfirm("Voulez vous vraimment supprimer cet étudiant ? Cette peut entraîner des opération iréversible.")) {
+				if(!etudiantRepository.hasInscription(etudiant.getIdEtu())) {
+					if(etudiantRepository.Delete(etudiant.getIdEtu())) {
+						AlertMessage.showInformation("L'étudiant à été supprimer");
+						this.loadEtudiants();
+					}
+				} else {
+					AlertMessage.showInformation("Cet étudiant est déja inscrit dans une formation.");
+					
 				}
+				
 			}
 		} else {
 			AlertMessage.showInformation("Veillez selectionner un étudiant");

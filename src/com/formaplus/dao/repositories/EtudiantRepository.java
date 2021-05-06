@@ -137,4 +137,15 @@ public class EtudiantRepository implements IRepository<Etudiant> {
 		}
 		return false;
 	}
+	
+	public boolean hasInscription(int id) {
+		try(PreparedStatement pstm = connection.prepareStatement("SELECT * FROM inscriptions WHERE id_etu = ?")) {
+			pstm.setInt(1, id);
+			return pstm.executeQuery().next();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

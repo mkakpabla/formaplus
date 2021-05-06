@@ -9,6 +9,7 @@ import java.sql.Statement;
 import com.formaplus.dao.models.Etudiant;
 import com.formaplus.dao.models.Formation;
 import com.formaplus.dao.models.Inscription;
+import com.formaplus.dao.models.Session;
 import com.formaplus.utils.Db;
 
 import javafx.collections.FXCollections;
@@ -49,6 +50,15 @@ public class InscriptionRepository implements IRepository<Inscription> {
 				insc.setFormation(formation);
 				insc.setIdInsc(rset.getInt("id_insc"));
 				insc.setDateInsc(rset.getDate("date_insc").toLocalDate());
+				insc.setPrixInsc(rset.getDouble("prix_insc"));
+				
+				
+				Session session = new Session();
+				session.setIdSession(rset.getInt("id_session"));
+				session.setLibSession(rset.getString("lib_session"));
+				session.setDateDebut(rset.getDate("date_debut").toLocalDate());
+				session.setDateFin(rset.getDate("date_fin").toLocalDate());
+				insc.setSession(session); 
 				inscriptions.add(insc);
 			}
 			return inscriptions;
@@ -102,6 +112,23 @@ public class InscriptionRepository implements IRepository<Inscription> {
 		return false;
 	}
 
+	
+	public boolean update(Inscription inscription) {
+		String sql = "UPDATE inscriptions SET prix_insc = ?, id_forma = ?, id_session = ?, id_etu = ? WHERE id_insc = ?";
+		try(PreparedStatement p1 = connection.prepareStatement(sql)) {
+			p1.setDouble(1, inscription.getPrixInsc());
+			p1.setInt(2, inscription.getFormation().getIdFormation());
+			p1.setInt(3, inscription.getSession().getIdSession());
+			p1.setInt(4, inscription.getEtudiant().getIdEtu());
+			p1.setInt(5, inscription.getIdInsc());
+			return p1.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		return false;
+	}
+	
 	@Override
 	public boolean Delete(int id) {
 		// TODO Auto-generated method stub

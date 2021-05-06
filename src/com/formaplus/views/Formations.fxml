@@ -58,6 +58,7 @@
                <children>
                   <Button fx:id="updateFormationButton" mnemonicParsing="false" onAction="#handleUpdateButtonAction" prefHeight="25.0" prefWidth="94.0" text="Modifier" />
                   <Button fx:id="deleteFormationButton" mnemonicParsing="false" onAction="#handleDeleteButtonAction" prefHeight="25.0" prefWidth="94.0" text="Supprimer" />
+                  <Button fx:id="printFormationsButton" layoutX="114.0" layoutY="10.0" mnemonicParsing="false" onAction="#handlePrintFormationButtonAction" prefHeight="25.0" prefWidth="94.0" text="Imprimer" />
                </children>
             </HBox>
          </children>

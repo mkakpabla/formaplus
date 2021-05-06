@@ -15,6 +15,7 @@ import com.formaplus.dao.repositories.FormationRepository;
 import com.formaplus.dao.repositories.RepositoryFactory;
 import com.formaplus.utils.AlertMessage;
 import com.formaplus.utils.LoadView;
+import com.formaplus.utils.Reporting;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -43,6 +44,8 @@ public class FormationsController implements Initializable {
 	private Button updateFormationButton;
 	@FXML
 	private Button deleteFormationButton;
+	@FXML
+    private Button printFormationsButton;
 	
 	private ObservableList<Formation> formationsList;
 	
@@ -94,6 +97,11 @@ public class FormationsController implements Initializable {
 		if(!searchField.getText().equals("")) {
 			formationsTable.setItems(FXCollections.observableArrayList(RepositoryFactory.getFormationRepository().search(searchField.getText())));
 		} else this.loadFormations();
+    }
+	
+	@FXML
+    public void handlePrintFormationButtonAction(ActionEvent event) {
+		Reporting.showReport("FormationsCollection", "formations", formationsTable.getItems());
     }
 	
 	

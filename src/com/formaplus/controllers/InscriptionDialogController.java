@@ -30,6 +30,7 @@ import com.formaplus.dao.models.Session;
 import com.formaplus.dao.repositories.EtudiantRepository;
 import com.formaplus.dao.repositories.FormationRepository;
 import com.formaplus.dao.repositories.InscriptionRepository;
+import com.formaplus.dao.repositories.RepositoryFactory;
 import com.formaplus.dao.repositories.SessionRepository;
 import com.formaplus.utils.AlertMessage;
 import com.formaplus.utils.LoadView;
@@ -42,7 +43,7 @@ import javafx.scene.control.ComboBox;
 
 import javafx.scene.control.DatePicker;
 
-public class InscriptionDialogController implements Initializable {
+public class InscriptionDialogController extends Controller implements Initializable {
 	@FXML
 	private Button saveButton;
 	
@@ -75,6 +76,8 @@ public class InscriptionDialogController implements Initializable {
 	
 	private File file;
 	
+	private int idInsc = 0;
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		initComboBox();
@@ -84,53 +87,69 @@ public class InscriptionDialogController implements Initializable {
 	// Event Listener on Button[#saveButton].onAction
 	@FXML
 	public void handleSaveButtonAction(ActionEvent event) {
-		Validator validator = new Validator();
-		validator.notEmpty(lastNameField.getText(), "Le nom n'est pas valide")
-				.notEmpty(firstNameField.getText(), "Le prénom est obligatoire")
-				.isNumber(phoneField.getText(), "Le numéro de téléphone n'est pas valide")
-				.minLength(phoneField.getText(), 8, "Le numéro de téléphone doit contenir au moins 8 caratères")
-				.notEmpty(sexeField.getSelectionModel().getSelectedItem().toString(), "Le sexe est obligatoire")
-				.isEmail(emailField.getText(), "L'email n'est pas valide")
-				.isNumber(priceField.getText(), "Le prix entrer n'est pas valide")
-				.isPastDate(birthDayField.getValue(), "La date de naissance n'est pas valide")
-				.notNull(sessionField.getValue(), "La session de la formation est obligatoire")
-				.notNull(formationField.getValue(), "Veiller selectionner la formation");
-		
-		if(validator.isValid()) {
-			if(file != null) {
-				Etudiant etudiant = new Etudiant();
-				etudiant.setNomEtu(lastNameField.getText());
-				etudiant.setPrenomEtu(firstNameField.getText());
-				etudiant.setEmailEtu(this.emailField.getText());
-				etudiant.setDateAjout(LocalDate.now());
-				etudiant.setTelEtu(Integer.parseInt(this.phoneField.getText()));
-				etudiant.setSexeEtu(sexeField.getValue());
-				try {
-					etudiant.setPhotoEtu(new FileInputStream(file));
-				} catch (FileNotFoundException e) {
-					
-					e.printStackTrace();
-				}
-				etudiant.setDateNaissEtu(birthDayField.getValue());
-				
-				Inscription insc = new Inscription();
-				insc.setEtudiant(etudiant);
-				insc.setFormation(formationField.getSelectionModel().getSelectedItem());
-				insc.setSession(sessionField.getSelectionModel().getSelectedItem());
-				insc.setPrixInsc(Double.parseDouble(priceField.getText()));
-				insc.setDateInsc(LocalDate.now());
-				if(new InscriptionRepository().Save(insc)) {
-					AlertMessage.showInformation("Inscription enrégistrer avec succes");
-					Node  source = (Node)event.getSource(); 
-				    Stage stage  = (Stage)source.getScene().getWindow();
-				    stage.close();
-				}
-			} else AlertMessage.showWarning("La photo de l'étudiant est requis");
+		if(this.idInsc == 0) {
+			Validator validator = new Validator();
+			validator.notEmpty(lastNameField.getText(), "Le nom n'est pas valide")
+					.notEmpty(firstNameField.getText(), "Le prénom est obligatoire")
+					.isNumber(phoneField.getText(), "Le numéro de téléphone n'est pas valide")
+					.minLength(phoneField.getText(), 8, "Le numéro de téléphone doit contenir au moins 8 caratères")
+					.notEmpty(sexeField.getSelectionModel().getSelectedItem().toString(), "Le sexe est obligatoire")
+					.isEmail(emailField.getText(), "L'email n'est pas valide")
+					.isNumber(priceField.getText(), "Le prix entrer n'est pas valide")
+					.isPastDate(birthDayField.getValue(), "La date de naissance n'est pas valide")
+					.notNull(sessionField.getValue(), "La session de la formation est obligatoire")
+					.notNull(formationField.getValue(), "Veiller selectionner la formation");
 			
+			if(validator.isValid()) {
+				if(file != null) {
+					Etudiant etudiant = new Etudiant();
+					etudiant.setNomEtu(lastNameField.getText());
+					etudiant.setPrenomEtu(firstNameField.getText());
+					etudiant.setEmailEtu(this.emailField.getText());
+					etudiant.setDateAjout(LocalDate.now());
+					etudiant.setTelEtu(Integer.parseInt(this.phoneField.getText()));
+					etudiant.setSexeEtu(sexeField.getValue());
+					try {
+						etudiant.setPhotoEtu(new FileInputStream(file));
+					} catch (FileNotFoundException e) {
+						
+						e.printStackTrace();
+					}
+					etudiant.setDateNaissEtu(birthDayField.getValue());
+					
+					Inscription insc = new Inscription();
+					insc.setEtudiant(etudiant);
+					insc.setFormation(formationField.getSelectionModel().getSelectedItem());
+					insc.setSession(sessionField.getSelectionModel().getSelectedItem());
+					insc.setPrixInsc(Double.parseDouble(priceField.getText()));
+					insc.setDateInsc(LocalDate.now());
+					if(new InscriptionRepository().Save(insc)) {
+						AlertMessage.showInformation("Inscription enrégistrer avec succes");
+						Node  source = (Node)event.getSource(); 
+					    Stage stage  = (Stage)source.getScene().getWindow();
+					    stage.close();
+					}
+				} else AlertMessage.showWarning("La photo de l'étudiant est requis");
+				
+			} else {
+				List<String> errors = validator.getErrors();
+				AlertMessage.showWarning(errors.get(0));
+			}
 		} else {
-			List<String> errors = validator.getErrors();
-			AlertMessage.showWarning(errors.get(0));
+			System.out.println("test");
+			Etudiant etudiant = new Etudiant();
+			etudiant.setIdEtu(Integer.parseInt(idField.getText()));
+			Inscription insc = new Inscription();
+			insc.setEtudiant(etudiant);
+			insc.setIdInsc(this.idInsc);
+			insc.setFormation(formationField.getSelectionModel().getSelectedItem());
+			insc.setSession(sessionField.getSelectionModel().getSelectedItem());
+			insc.setPrixInsc(Double.parseDouble(priceField.getText()));
+			if(RepositoryFactory.getInscriptionRepository().update(insc)) {
+				AlertMessage.showInformation("Les informations de l'inscription ont été mis à jour");
+			}
 		}
+		
 		
 		
 	}
@@ -138,12 +157,66 @@ public class InscriptionDialogController implements Initializable {
 	@FXML
 	public void handleSearchButtonAction(ActionEvent event) {
 		Etudiant etudiant = new EtudiantRepository().GetById(Integer.parseInt(idField.getText()));
+		if(etudiant != null) {
+			this.lastNameField.setText(etudiant.getNomEtu());
+			this.firstNameField.setText(etudiant.getPrenomEtu());
+			this.emailField.setText(etudiant.getEmailEtu());
+			this.phoneField.setText(String.valueOf(etudiant.getTelEtu()));
+			this.birthDayField.setValue(etudiant.getDateNaissEtu());
+			this.sexeField.getSelectionModel().select(etudiant.getSexeEtu());
+			
+			try {
+				OutputStream os = new FileOutputStream(new File("etudiant.jpg"));
+				byte[] content = new byte[1024];
+				int size = 0;
+				while((size = etudiant.getPhotoEtu().read(content)) != -1) {
+					os.write(content, 0, size);
+				}
+				Image image = new Image("file:etudiant.jpg", 140, 130, true, true);
+				photoImageView.setImage(image);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			this.disableFields();
+		} else {
+			AlertMessage.showInformation("Aucun étudiant n'a été trouvé");
+			
+		}
+		
+	}
+	// Event Listener on Button[#imageChooseButton].onAction
+	@FXML
+	public void handleImageChooseButton(ActionEvent event) {
+		file = LoadView.chooseImageDialog(imageChooseButton);
+		if(file != null) photoImageView.setImage(new Image(file.toURI().toString(), 140, 130, true, true));
+	}
+	
+	@FXML
+    public void handlleSessionFieldAction(ActionEvent event) {
+		Session s = sessionField.getSelectionModel().getSelectedItem();
+		formationField.setItems(new FormationRepository().GetAllWhereSessionId(s.getIdSession()));
+    }
+	
+	
+	public void setData(Object obj) {
+		Inscription insc = (Inscription)obj;
+		idInsc = insc.getIdInsc();
+		Etudiant etudiant = insc.getEtudiant();
 		this.lastNameField.setText(etudiant.getNomEtu());
 		this.firstNameField.setText(etudiant.getPrenomEtu());
 		this.emailField.setText(etudiant.getEmailEtu());
 		this.phoneField.setText(String.valueOf(etudiant.getTelEtu()));
 		this.birthDayField.setValue(etudiant.getDateNaissEtu());
 		this.sexeField.getSelectionModel().select(etudiant.getSexeEtu());
+		this.priceField.setText(String.valueOf(insc.getPrixInsc()));
+		this.sessionField.getSelectionModel().select(insc.getSession());
+		this.formationField.getSelectionModel().select(insc.getFormation());
+		this.idField.setText(String.valueOf(etudiant.getIdEtu()));
 		
 		try {
 			OutputStream os = new FileOutputStream(new File("etudiant.jpg"));
@@ -164,18 +237,6 @@ public class InscriptionDialogController implements Initializable {
 		
 		this.disableFields();
 	}
-	// Event Listener on Button[#imageChooseButton].onAction
-	@FXML
-	public void handleImageChooseButton(ActionEvent event) {
-		file = LoadView.chooseImageDialog(imageChooseButton);
-		if(file != null) photoImageView.setImage(new Image(file.toURI().toString(), 140, 130, true, true));
-	}
-	
-	@FXML
-    public void handlleSessionFieldAction(ActionEvent event) {
-		Session s = sessionField.getSelectionModel().getSelectedItem();
-		formationField.setItems(new FormationRepository().GetAllWhereSessionId(s.getIdSession()));
-    }
 	
 	
 	public void initComboBox() {
@@ -196,6 +257,8 @@ public class InscriptionDialogController implements Initializable {
 		this.phoneField.setDisable(true);
 		this.birthDayField.setDisable(true);
 		this.sexeField.setDisable(true);
+		this.imageChooseButton.setDisable(true);
+		
 		
 	}
 	
