@@ -11,6 +11,8 @@ public class DbConnector {
 	
 	private static Connection connect;
 	
+	private static Connection connectTransa;
+	
 	private static String url;
 	
 	private static String login;
@@ -27,6 +29,19 @@ public class DbConnector {
 			}
 		}
 		return connect;
+	}
+	
+	public static Connection getTransactionConnection() {
+		if(connectTransa == null){
+			loadConf();
+			try {
+				connectTransa = DriverManager.getConnection(url,login,password);
+				connectTransa.setAutoCommit(false);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return connectTransa;
 	}
 	
 	

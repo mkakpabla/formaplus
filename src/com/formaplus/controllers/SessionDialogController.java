@@ -139,19 +139,30 @@ public class SessionDialogController extends Controller implements Initializable
 		CheckBox cbx = (CheckBox)event.getSource();
 		SessionRepository sessionRepo = RepositoryFactory.getSessionRepository();
 		if(cbx.isSelected()) {
-			if(AlertMessage.showConfirm("Voulez vous vraiment ajouter cette formation de cette session ?")) {
-				if(sessionRepo.insertFormation(s.getIdSession(), f.getIdFormation())) {
-					AlertMessage.showInformation("Cette formation a été ajouter à la session");
-				}
-			} else {
+			if(!sessionRepo.insertFormation(s.getIdSession(), f.getIdFormation())) {
+				//AlertMessage.showInformation("Cette formation a été ajouter à la session");
 				cbx.setSelected(false);
 			}
+			/*
+			if(AlertMessage.showConfirm("Voulez vous vraiment ajouter cette formation de cette session ?")) {
+				
+			} else {
+				cbx.setSelected(false);
+			}*/
 		} else {
-			
+			if(!sessionRepo.hasInscription(s.getIdSession(), f.getIdFormation())) {
+				if(!sessionRepo.removeFormation(s.getIdSession(), f.getIdFormation())) {
+					cbx.setSelected(true);
+				}
+			} else {
+				AlertMessage.showInformation("Vous ne pouvez supprimmer cette formation de cette session");
+				cbx.setSelected(true);
+			}
+			/*
 			if(AlertMessage.showConfirm("Voulez vous vraiment supprimer cette formation de cette session ?")) {
 				if(sessionRepo.hasInscription(s.getIdSession(), f.getIdFormation())) {
 					if(sessionRepo.removeFormation(s.getIdSession(), f.getIdFormation())) {
-						AlertMessage.showInformation("Cette formation a été supprimer de la session");
+						//AlertMessage.showInformation("Cette formation a été supprimer de la session");
 					} else {
 						cbx.setSelected(true);
 					}
@@ -161,7 +172,7 @@ public class SessionDialogController extends Controller implements Initializable
 				}
 			} else {
 				cbx.setSelected(true);
-			}
+			}*/
 		}
 	}
 }

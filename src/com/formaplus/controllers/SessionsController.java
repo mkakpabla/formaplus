@@ -58,7 +58,16 @@ public class SessionsController implements Initializable {
 	public void handleEditButtonAction(ActionEvent event) {
 		Session session = sessionsTable.getSelectionModel().getSelectedItem();
 		Stage dialogStage = LoadView.getModalStage(newSessionButton, "SessionDialog", session, "Enrégistrer une nouvelle session");
-		dialogStage.setOnCloseRequest(evt -> this.loadSessions());
+		dialogStage.setOnCloseRequest(evt -> {
+			
+			try {
+				this.loadSessions();
+				//DbConnector.getTransactionConnection().close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 		dialogStage.showAndWait();
 	}
 	// Event Listener on Button[#deleteButton].onAction

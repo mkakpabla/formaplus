@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="369.0" prefWidth="769.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.formaplus.controllers.InscriptionDialogController">
+<AnchorPane centerShape="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="369.0" prefWidth="769.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.formaplus.controllers.InscriptionDialogController">
    <children>
       <Button fx:id="saveButton" layoutX="615.0" layoutY="321.0" mnemonicParsing="false" onAction="#handleSaveButtonAction" prefHeight="25.0" prefWidth="138.0" text="Sauvegarder" />
       <VBox layoutX="184.0" layoutY="58.0" prefHeight="48.0" prefWidth="138.0">
@@ -91,15 +92,18 @@
             <Font name="Century Gothic Bold" size="15.0" />
          </font>
       </Label>
-      <Pane layoutX="14.0" layoutY="69.0" style="-fx-border-color: #B5B5B5;">
+      <Pane layoutX="14.0" layoutY="69.0" style="-fx-border-color: #B5B5B5; -fx-background-color: white;">
          <children>
-            <ImageView fx:id="photoImageView" fitHeight="133.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="photoImageView" fitHeight="120.0" fitWidth="120.0" focusTraversable="true" layoutX="6.0" layoutY="6.0" pickOnBounds="true" smooth="false">
                <image>
                   <Image url="@../resources/images/user_avatar.png" />
                </image>
             </ImageView>
             <Button fx:id="imageChooseButton" layoutX="108.0" layoutY="108.0" mnemonicParsing="false" onAction="#handleImageChooseButton" prefHeight="25.0" prefWidth="25.0" text="S" />
          </children>
+         <opaqueInsets>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </opaqueInsets>
       </Pane>
    </children>
 </AnchorPane>

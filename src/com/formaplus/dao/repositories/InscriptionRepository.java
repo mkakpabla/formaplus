@@ -71,12 +71,53 @@ public class InscriptionRepository implements IRepository<Inscription> {
 
 	@Override
 	public Inscription GetById(int id) {
-		// TODO Auto-generated method stub
+		try(PreparedStatement p = connection.prepareStatement("SELECT * FROM full_inscriptions WHERE id_insc = ?")) {
+			p.setInt(1, id);
+			ResultSet rset = p.executeQuery();
+			if(rset.next()) {
+				Inscription insc = new Inscription();
+				Etudiant etudiant = new Etudiant();
+				etudiant.setIdEtu(rset.getInt("id_etu"));
+				etudiant.setNomEtu(rset.getString("nom_etu"));
+				etudiant.setPrenomEtu(rset.getString("prenom_etu"));
+				etudiant.setEmailEtu(rset.getString("email_etu"));
+				etudiant.setSexeEtu(rset.getString("sexe_etu"));
+				etudiant.setTelEtu(rset.getInt("tel_etu"));
+				etudiant.setDateNaissEtu(rset.getDate("date_naiss_etu").toLocalDate());
+				etudiant.setDateAjout(rset.getDate("date_ajout").toLocalDate());
+				etudiant.setPhotoEtu(rset.getBinaryStream("photo_etu"));
+				
+				Formation formation = new Formation();
+				formation.setIdFormation(rset.getInt("id_forma"));
+				formation.setLibFormation(rset.getString("lib_forma"));
+				formation.setDureeFormation(rset.getInt("duree_forma"));
+				formation.setPrixFormation(rset.getDouble("prix_forma"));
+				
+				
+				insc.setEtudiant(etudiant);
+				insc.setFormation(formation);
+				insc.setIdInsc(rset.getInt("id_insc"));
+				insc.setDateInsc(rset.getDate("date_insc").toLocalDate());
+				insc.setPrixInsc(rset.getDouble("prix_insc"));
+				
+				
+				Session session = new Session();
+				session.setIdSession(rset.getInt("id_session"));
+				session.setLibSession(rset.getString("lib_session"));
+				session.setDateDebut(rset.getDate("date_debut").toLocalDate());
+				session.setDateFin(rset.getDate("date_fin").toLocalDate());
+				insc.setSession(session); 
+				return insc;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
-	@Override
-	public boolean Save(Inscription obj) {
+	
+	public int insertWithNewStudent(Inscription obj) {
 		String sql = "INSERT INTO etudiants(nom_etu, prenom_etu, sexe_etu, email_etu, tel_etu, date_naiss_etu, photo_etu, date_ajout) VALUES(?,?,?,?,?,?,?,?)";
 		try(PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 			
@@ -93,25 +134,42 @@ public class InscriptionRepository implements IRepository<Inscription> {
 				if(r.next()) {
 					int idEtu =  r.getInt(1);
 					sql = "INSERT INTO inscriptions(prix_insc, date_insc, id_forma, id_session, id_etu) VALUES(?,?,?,?,?)";
-					try(PreparedStatement p1 = connection.prepareStatement(sql)) {
+					try(PreparedStatement p1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 						p1.setDouble(1, obj.getPrixInsc());
 						p1.setString(2, obj.getDateInsc().toString());
 						p1.setInt(3, obj.getFormation().getIdFormation());
 						p1.setInt(4, obj.getSession().getIdSession());
 						p1.setInt(5, idEtu);
-						return p1.executeUpdate() > 0;
+						ResultSet rset = p1.getGeneratedKeys();
+						if(r.next()) return rset.getInt(1);
 					}
 				}
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			return 0;
 			
 		}
-		return false;
+		return 0;
 	}
-
+	
+	
+	public int insert(Inscription inscription) {
+		try(PreparedStatement p1 = connection.prepareStatement("INSERT INTO inscriptions(prix_insc, date_insc, id_forma, id_session, id_etu) VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+			p1.setDouble(1, inscription.getPrixInsc());
+			p1.setString(2, inscription.getDateInsc().toString());
+			p1.setInt(3, inscription.getFormation().getIdFormation());
+			p1.setInt(4, inscription.getSession().getIdSession());
+			p1.setInt(5, inscription.getEtudiant().getIdEtu());
+			p1.executeUpdate();
+			ResultSet r = p1.getGeneratedKeys();
+			if(r.next()) return r.getInt(1);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return 0;
+	}
 	
 	public boolean update(Inscription inscription) {
 		String sql = "UPDATE inscriptions SET prix_insc = ?, id_forma = ?, id_session = ?, id_etu = ? WHERE id_insc = ?";
@@ -131,6 +189,12 @@ public class InscriptionRepository implements IRepository<Inscription> {
 	
 	@Override
 	public boolean Delete(int id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean Save(Inscription obj) {
 		// TODO Auto-generated method stub
 		return false;
 	}

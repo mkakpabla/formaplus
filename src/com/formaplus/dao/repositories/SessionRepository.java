@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.formaplus.dao.DbConnector;
 import com.formaplus.dao.models.Formation;
 import com.formaplus.dao.models.Session;
 import com.formaplus.utils.Db;
@@ -51,7 +52,7 @@ private Connection connection;
 	
 	
 	public boolean removeFormation(int idSession, int idFormation) {
-		try(PreparedStatement pstm = connection.prepareStatement("DELETE FROM formation_session WHERE id_forma = ? AND id_session = ?")) {
+		try(PreparedStatement pstm = DbConnector.getTransactionConnection().prepareStatement("DELETE FROM formation_session WHERE id_forma = ? AND id_session = ?")) {
 			pstm.setInt(1, idFormation);
 			pstm.setInt(2, idSession);
 			return pstm.executeUpdate() > 0;
@@ -75,7 +76,7 @@ private Connection connection;
 	}
 	
 	public boolean insertFormation(int idSession, int idFormation) {
-		try(PreparedStatement ps2 = connection.prepareStatement("INSERT INTO formation_session(id_forma, id_session) VALUES(?,?)")) {
+		try(PreparedStatement ps2 = DbConnector.getTransactionConnection().prepareStatement("INSERT INTO formation_session(id_forma, id_session) VALUES(?,?)")) {
 			ps2.setInt(1, idFormation);
 			ps2.setInt(2, idSession);
 			ps2.execute();
@@ -100,12 +101,14 @@ private Connection connection;
 	}
 	
 	public boolean update(Session obj) {
-		try(PreparedStatement pstm = connection.prepareStatement("UPDATE sessions SET lib_session = ?, date_debut = ?, date_fin = ? WHERE id_session = ?")) {
+		try(PreparedStatement pstm = DbConnector.getTransactionConnection().prepareStatement("UPDATE sessions SET lib_session = ?, date_debut = ?, date_fin = ? WHERE id_session = ?")) {
 			pstm.setString(1, obj.getLibSession());
 			pstm.setString(2, obj.getDateDebut().toString());
 			pstm.setString(3, obj.getDateFin().toString());
 			pstm.setInt(4, obj.getIdSession());
-			return pstm.executeUpdate() > 0;
+			pstm.executeUpdate();
+			DbConnector.getTransactionConnection().commit();
+			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
