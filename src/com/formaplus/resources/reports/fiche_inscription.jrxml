@@ -11,6 +11,7 @@
 	<parameter name="prix_insc" class="java.lang.Double"/>
 	<parameter name="prix_forma" class="java.lang.Double"/>
 	<parameter name="date_insc" class="java.lang.String"/>
+	<parameter name="insc_num" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -532,6 +533,52 @@
 				</textElement>
 				<text><![CDATA[Signature de l'étudiant]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="300" y="230" width="20" height="25" uuid="310bb589-3df5-4ee2-8057-aa59fed34608">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N°:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="320" y="230" width="223" height="25" uuid="9cbb24b0-3a59-4755-95e2-8fc160f6f3f5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{insc_num}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="300" y="630" width="20" height="25" uuid="7f0c78f3-ac8c-4240-aaee-72e5639ff223">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N°:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="320" y="630" width="225" height="25" uuid="1e2b581d-98a0-492f-8fab-a572073d3753">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{insc_num}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="-20" y="357" width="595" height="23" uuid="b6365780-abce-4f87-b52c-18805c69670c"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Dashed"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</frame>
 		</band>
 	</detail>
 </jasperReport>

@@ -13,6 +13,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +32,7 @@ import com.formaplus.dao.repositories.FormationRepository;
 import com.formaplus.dao.repositories.RepositoryFactory;
 import com.formaplus.dao.repositories.SessionRepository;
 import com.formaplus.utils.AlertMessage;
+import com.formaplus.utils.Db;
 import com.formaplus.utils.LoadView;
 import com.formaplus.utils.Reporting;
 import com.formaplus.utils.Utils;
@@ -101,6 +104,7 @@ public class InscriptionDialogController extends Controller implements Initializ
 			
 			if(this.idField.getText().isEmpty()) {
 				if(validator.isValid()) {
+					
 					if(choosedPhoto != null) {
 						Etudiant etudiant = new Etudiant();
 						etudiant.setNomEtu(lastNameField.getText());
@@ -112,13 +116,18 @@ public class InscriptionDialogController extends Controller implements Initializ
 						etudiant.setPhotoEtu(choosedPhoto);
 						etudiant.setDateNaissEtu(birthDayField.getValue());
 						
+						Formation formation = formationField.getSelectionModel().getSelectedItem();
+						Session session = sessionField.getSelectionModel().getSelectedItem();
+						
 						Inscription insc = new Inscription();
 						insc.setEtudiant(etudiant);
-						insc.setFormation(formationField.getSelectionModel().getSelectedItem());
-						insc.setSession(sessionField.getSelectionModel().getSelectedItem());
+						insc.setFormation(formation);
+						insc.setSession(session);
 						insc.setPrixInsc(Double.parseDouble(priceField.getText()));
 						insc.setDateInsc(LocalDate.now());
+						
 						int idInsc = RepositoryFactory.getInscriptionRepository().insertWithNewStudent(insc);
+						System.out.println(idInsc);
 						if(idInsc != 0) {
 							AlertMessage.showInformation("Inscription enrégistrer avec succes");
 							insc = RepositoryFactory.getInscriptionRepository().GetById(idInsc);
@@ -133,15 +142,30 @@ public class InscriptionDialogController extends Controller implements Initializ
 			} else {
 				Etudiant etudiant = RepositoryFactory.getEtudiantRepository().GetById(Integer.parseInt(idField.getText()));
 				if(etudiant != null) {
+					Formation formation = formationField.getSelectionModel().getSelectedItem();
+					Session session = sessionField.getSelectionModel().getSelectedItem();
 					Inscription insc = new Inscription();
 					insc.setEtudiant(etudiant);
-					insc.setFormation(formationField.getSelectionModel().getSelectedItem());
-					insc.setSession(sessionField.getSelectionModel().getSelectedItem());
+					insc.setFormation(formation);
+					insc.setSession(session);
 					insc.setPrixInsc(Double.parseDouble(priceField.getText()));
 					insc.setDateInsc(LocalDate.now());
-					int idInsc = RepositoryFactory.getInscriptionRepository().insert(insc);
-					insc = RepositoryFactory.getInscriptionRepository().GetById(idInsc);
-					this.printFicheInsc(insc);
+					
+					try(PreparedStatement p = Db.getConnection().prepareStatement("SELECT * FROM inscriptions WHERE id_forma = ? AND id_session = ? AND id_etu = ?")) {
+						p.setInt(1, formation.getIdFormation());
+						p.setInt(2, session.getIdSession());
+						p.setInt(3, etudiant.getIdEtu());
+						ResultSet rset = p.executeQuery();
+						if(rset.next()) {
+							AlertMessage.showInformation(etudiant.toString() + " est déja inscrit dans cette formation pour cette section");
+						} else {
+							int idInsc = RepositoryFactory.getInscriptionRepository().insert(insc);
+							insc = RepositoryFactory.getInscriptionRepository().GetById(idInsc);
+							this.printFicheInsc(insc);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				} else {
 					AlertMessage.showInformation("Etudiant non trouvé");
 				}

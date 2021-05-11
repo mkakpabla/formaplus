@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 
 import com.formaplus.dao.models.Formation;
 import com.formaplus.dao.models.Session;
-import com.formaplus.dao.repositories.FormationRepository;
 import com.formaplus.dao.repositories.RepositoryFactory;
 import com.formaplus.dao.repositories.SessionRepository;
 import com.formaplus.utils.AlertMessage;
@@ -34,12 +33,12 @@ public class SessionDialogController extends Controller implements Initializable
 	
 	@FXML
 	@Future(message="La date de début n'est pas valide")
-	@NotNull(message="la date début est obligatoire")
+	@NotNull(message="La date début est obligatoire")
 	private DatePicker startDateField;
 	
 	@FXML
 	@Future(message="La date de fin n'est pas valide")
-	@NotNull(message="la date fin est obligatoire")
+	@NotNull(message="La date fin est obligatoire")
 	private DatePicker endDateField;
 	
 	@FXML
@@ -55,8 +54,7 @@ public class SessionDialogController extends Controller implements Initializable
 	private Button saveButton;
 	
 	@FXML
-	@NotEmpty(message="le libellé de la session n'est pas valide")
-	
+	@NotEmpty(message="Le libellé de la session n'est pas valide")
 	private TextField libFormaField;
 	
 	private int idSession = 0;
@@ -74,7 +72,7 @@ public class SessionDialogController extends Controller implements Initializable
 				RepositoryFactory.getSessionRepository().update(session);
 				AlertMessage.showInformation("Les informations de la session ont été mis jour");
 			} else {
-				AlertMessage.showWarning("la date de fin ne peut être inférieur à la date de début");
+				AlertMessage.showWarning("La date de fin ne peut être inférieur ou égale à la date de début");
 			}
 		} else {
 			ObservableList<Formation> selectedFormations = FXCollections.observableArrayList();
@@ -91,24 +89,35 @@ public class SessionDialogController extends Controller implements Initializable
 						session.setDateFin(endDateField.getValue());
 						session.setLibSession(libFormaField.getText());
 						session.setFormations(selectedFormations);
-						new SessionRepository().Save(session);
+						if(RepositoryFactory.getSessionRepository().Save(session)) {
+							AlertMessage.showInformation("La session a été ajoutée avec success");
+							this.initTable();
+							libFormaField.clear();
+							startDateField.setValue(null);
+							endDateField.setValue(null);
+						}
+						else AlertMessage.showInformation("La session n'a pas été ajoutée");
+						
 					} else {
-						AlertMessage.showWarning("la date de fin ne peut être inférieur à la date de début");
+						AlertMessage.showWarning("La date de fin ne peut être inférieur ou égale à la date de début");
 					}
 				} else {
 					AlertMessage.showWarning("Veillez selectionner les formations de la session");
-					
 				}
 			}
 		}
-		
+	}
+	
+	
+	private void initTable() {
+		formationsTable.setItems(RepositoryFactory.getFormationRepository().GetAllWithCheckBox());
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		libColumn.setCellValueFactory(new PropertyValueFactory<Formation, CheckBox>("checkBoxFormation"));
 		idFormaColumn.setCellValueFactory(new PropertyValueFactory<Formation, Integer>("idFormation"));
-		formationsTable.setItems(new FormationRepository().GetAllWithCheckBox());
+		this.initTable();
 	}
 	
 	@Override
@@ -140,15 +149,8 @@ public class SessionDialogController extends Controller implements Initializable
 		SessionRepository sessionRepo = RepositoryFactory.getSessionRepository();
 		if(cbx.isSelected()) {
 			if(!sessionRepo.insertFormation(s.getIdSession(), f.getIdFormation())) {
-				//AlertMessage.showInformation("Cette formation a été ajouter à la session");
 				cbx.setSelected(false);
 			}
-			/*
-			if(AlertMessage.showConfirm("Voulez vous vraiment ajouter cette formation de cette session ?")) {
-				
-			} else {
-				cbx.setSelected(false);
-			}*/
 		} else {
 			if(!sessionRepo.hasInscription(s.getIdSession(), f.getIdFormation())) {
 				if(!sessionRepo.removeFormation(s.getIdSession(), f.getIdFormation())) {
@@ -158,21 +160,6 @@ public class SessionDialogController extends Controller implements Initializable
 				AlertMessage.showInformation("Vous ne pouvez supprimmer cette formation de cette session");
 				cbx.setSelected(true);
 			}
-			/*
-			if(AlertMessage.showConfirm("Voulez vous vraiment supprimer cette formation de cette session ?")) {
-				if(sessionRepo.hasInscription(s.getIdSession(), f.getIdFormation())) {
-					if(sessionRepo.removeFormation(s.getIdSession(), f.getIdFormation())) {
-						//AlertMessage.showInformation("Cette formation a été supprimer de la session");
-					} else {
-						cbx.setSelected(true);
-					}
-				} else {
-					AlertMessage.showInformation("Vous ne pouvez supprimmer cette formation de cette session");
-					cbx.setSelected(true);
-				}
-			} else {
-				cbx.setSelected(true);
-			}*/
 		}
 	}
 }

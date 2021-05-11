@@ -42,6 +42,8 @@ public class EtudiantsController implements Initializable {
 	private Button editButton;
 	@FXML
 	private Button deleteButton;
+	@FXML
+    private Button printButton;
 	
 
 	// Event Listener on Button[#editButton].onAction
@@ -80,6 +82,15 @@ public class EtudiantsController implements Initializable {
 		}
 		
 	}
+	
+	@FXML
+    public void handlePrintButtonAction(ActionEvent event) {
+		LoadView.showModal(printButton.getScene().getWindow(), "EtudiantFiltre", "Imprimer liste étudiant");
+		
+
+    }
+	
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub

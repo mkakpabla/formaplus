@@ -13,7 +13,6 @@ import java.util.ResourceBundle;
 
 import com.formaplus.dao.models.Session;
 import com.formaplus.dao.repositories.RepositoryFactory;
-import com.formaplus.dao.repositories.SessionRepository;
 import com.formaplus.utils.AlertMessage;
 import com.formaplus.utils.LoadView;
 
@@ -58,16 +57,7 @@ public class SessionsController implements Initializable {
 	public void handleEditButtonAction(ActionEvent event) {
 		Session session = sessionsTable.getSelectionModel().getSelectedItem();
 		Stage dialogStage = LoadView.getModalStage(newSessionButton, "SessionDialog", session, "Enrégistrer une nouvelle session");
-		dialogStage.setOnCloseRequest(evt -> {
-			
-			try {
-				this.loadSessions();
-				//DbConnector.getTransactionConnection().close();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
+		dialogStage.setOnCloseRequest(evt -> this.loadSessions());
 		dialogStage.showAndWait();
 	}
 	// Event Listener on Button[#deleteButton].onAction
@@ -79,7 +69,7 @@ public class SessionsController implements Initializable {
 			if(AlertMessage.showConfirm("Voulez vous vraimment supprimer cette session")) {
 				if(!RepositoryFactory.getSessionRepository().hasInscription(session.getIdSession())) {
 					if(RepositoryFactory.getSessionRepository().Delete(session.getIdSession())) {
-						AlertMessage.showConfirm("La session a été supprimer");
+						AlertMessage.showInformation("La session a été supprimer");
 						this.loadSessions();
 					}
 				} else {
@@ -95,8 +85,9 @@ public class SessionsController implements Initializable {
 	@FXML
 	public void handleNewSessionButtonAction(ActionEvent event) {
 		Stage dialogStage = LoadView.getModalStage(newSessionButton, "SessionDialog", "Enrégistrer une nouvelle session");
-		//dialogStage.setOnCloseRequest(evt -> loadInscriptions());
+		dialogStage.setOnCloseRequest(evt -> loadSessions());
 		dialogStage.showAndWait();
+		
 	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -109,6 +100,6 @@ public class SessionsController implements Initializable {
 	}
 	
 	public void loadSessions() {
-		sessionsTable.setItems(FXCollections.observableArrayList(new SessionRepository().GetAll()));
+		sessionsTable.setItems(FXCollections.observableArrayList(RepositoryFactory.getSessionRepository().GetAll()));
 	}
 }

@@ -140,8 +140,9 @@ public class InscriptionRepository implements IRepository<Inscription> {
 						p1.setInt(3, obj.getFormation().getIdFormation());
 						p1.setInt(4, obj.getSession().getIdSession());
 						p1.setInt(5, idEtu);
+						p1.executeUpdate();
 						ResultSet rset = p1.getGeneratedKeys();
-						if(r.next()) return rset.getInt(1);
+						if(rset.next()) return rset.getInt(1);
 					}
 				}
 			}
@@ -187,9 +188,26 @@ public class InscriptionRepository implements IRepository<Inscription> {
 		return false;
 	}
 	
-	@Override
+	
+	public boolean hasPaiement(int id) {
+		try(PreparedStatement ps = connection.prepareStatement("SELECT * FROM paiements WHERE id_insc = ?")) {
+			ps.setInt(1, id);
+			ResultSet rset = ps.executeQuery();
+			if(rset.next()) return true;
+			
+		} catch (Exception e) {
+		}
+		return false;
+	}
+	
 	public boolean Delete(int id) {
-		// TODO Auto-generated method stub
+		try(PreparedStatement ps = connection.prepareStatement("DELETE FROM inscriptions WHERE id_insc = ?")) {
+			ps.setInt(1, id);
+			return ps.executeUpdate() > 0;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 

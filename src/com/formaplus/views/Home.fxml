@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -32,21 +35,21 @@
       </HBox>
    </top>
    <center>
-      <AnchorPane fx:id="mainAnchorePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="mainAnchorePane" prefHeight="415.0" prefWidth="732.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
          <children>
-            <HBox layoutX="14.0" layoutY="14.0" prefHeight="106.0" prefWidth="704.0">
+            <HBox layoutX="14.0" layoutY="14.0" prefHeight="87.0" prefWidth="704.0" spacing="20.0">
                <children>
-                  <VBox prefHeight="90.0" prefWidth="212.0" style="-fx-background-color: blue; -fx-background-radius: 5;">
+                  <VBox prefHeight="76.0" prefWidth="212.0" style="-fx-background-color: blue; -fx-background-radius: 5;">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="52.0" prefWidth="212.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="212.0">
                            <children>
                               <Label text="ETUDIANTS" textFill="WHITE">
                                  <font>
-                                    <Font name="Century Gothic Bold" size="14.0" />
+                                    <Font name="Calibri Bold" size="18.0" />
                                  </font>
                               </Label>
-                              <Pane prefHeight="34.0" prefWidth="87.0" />
-                              <ImageView fitHeight="29.0" fitWidth="43.0" pickOnBounds="true" preserveRatio="true">
+                              <Pane prefHeight="35.0" prefWidth="73.0" />
+                              <ImageView fitHeight="29.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../resources/images/students_20px.png" />
                                  </image>
@@ -56,7 +59,75 @@
                               <Insets left="10.0" />
                            </padding>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="73.0" prefWidth="212.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="202.0">
+                           <children>
+                              <Label text="200" textFill="WHITE">
+                                 <font>
+                                    <Font name="Century Gothic Bold" size="28.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox layoutX="10.0" layoutY="10.0" prefHeight="76.0" prefWidth="212.0" style="-fx-background-color: blue; -fx-background-radius: 5;">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="212.0">
+                           <children>
+                              <Label text="SESSIONS" textFill="WHITE">
+                                 <font>
+                                    <Font name="Calibri Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Pane prefHeight="35.0" prefWidth="73.0" />
+                              <ImageView fitHeight="29.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/images/students_20px.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="202.0">
+                           <children>
+                              <Label text="200" textFill="WHITE">
+                                 <font>
+                                    <Font name="Century Gothic Bold" size="28.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox layoutX="222.0" layoutY="10.0" prefHeight="76.0" prefWidth="212.0" style="-fx-background-color: blue; -fx-background-radius: 5;">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="212.0">
+                           <children>
+                              <Label prefHeight="22.0" prefWidth="113.0" text="FORMATIONS" textFill="WHITE">
+                                 <font>
+                                    <Font name="Calibri Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Pane prefHeight="35.0" prefWidth="50.0" />
+                              <ImageView fitHeight="29.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/images/students_20px.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="202.0">
                            <children>
                               <Label text="200" textFill="WHITE">
                                  <font>
@@ -72,6 +143,14 @@
                   </VBox>
                </children>
             </HBox>
+            <BarChart layoutX="14.0" layoutY="127.0" prefHeight="253.0" prefWidth="709.0">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </BarChart>
          </children></AnchorPane>
    </center>
 </BorderPane>

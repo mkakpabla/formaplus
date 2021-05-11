@@ -31,6 +31,9 @@ public class Db {
 	
 	
 	
+	
+	
+	
 	private static void loadConf() {
 		if(url == null || login == null || password == null) {
 			Properties props = new Properties();
