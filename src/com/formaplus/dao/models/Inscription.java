@@ -82,14 +82,10 @@ public class Inscription {
 	
 	
 	public String getFullNum() {
-		return String.valueOf(this.getIdInsc()) + String.valueOf(this.getEtudiant().getIdEtu())
-		 + String.valueOf(this.getSession().getIdSession()) + String.valueOf(this.getFormation().getIdFormation());
+		return String.valueOf(this.getIdInsc()) + "-" + String.valueOf(this.getEtudiant().getIdEtu())
+		+ "-" + String.valueOf(this.getSession().getIdSession()) + "-" + String.valueOf(this.getFormation().getIdFormation());
 	}
-	
-	
-	
-	
-	
+
 	
 	
 	

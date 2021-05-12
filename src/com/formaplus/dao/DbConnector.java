@@ -3,6 +3,8 @@ package com.formaplus.dao;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -43,6 +45,22 @@ public class DbConnector {
 		}
 		return connectTransa;
 	}
+	
+	private static PreparedStatement getPreparedStatement(String sql, Object... params) throws SQLException {
+		PreparedStatement preparedStatement = DbConnector.getConnection().prepareStatement(sql);
+		for (int i = 0; i < params.length; i++) {
+            preparedStatement.setObject((i + 1), params[i]);
+        }
+        return preparedStatement;
+    }
+
+    public static boolean executeUpdate(String sql, Object... params) throws SQLException {
+        return getPreparedStatement(sql, params).executeUpdate() > 0;
+    }
+
+    public static ResultSet executeQuery(String sql, Object... params) throws SQLException {
+        return getPreparedStatement(sql, params).executeQuery();
+    }
 	
 	
 	

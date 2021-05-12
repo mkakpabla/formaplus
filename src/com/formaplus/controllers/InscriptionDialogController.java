@@ -104,7 +104,6 @@ public class InscriptionDialogController extends Controller implements Initializ
 			
 			if(this.idField.getText().isEmpty()) {
 				if(validator.isValid()) {
-					
 					if(choosedPhoto != null) {
 						Etudiant etudiant = new Etudiant();
 						etudiant.setNomEtu(lastNameField.getText());
