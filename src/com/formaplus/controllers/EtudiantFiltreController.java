@@ -9,25 +9,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import com.formaplus.dao.models.Etudiant;
 import com.formaplus.dao.models.Formation;
 import com.formaplus.dao.models.Session;
 import com.formaplus.dao.repositories.RepositoryFactory;
-import com.formaplus.utils.AlertMessage;
+import com.formaplus.utils.JasperViewerFX;
+import com.formaplus.utils.Reporting;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 
 import javafx.scene.control.ComboBox;
-import net.sf.jasperreports.engine.JREmptyDataSource;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
-import net.sf.jasperreports.view.JasperViewer;
 
 public class EtudiantFiltreController implements Initializable {
 	@FXML
@@ -45,34 +40,35 @@ public class EtudiantFiltreController implements Initializable {
 	// Event Listener on Button[#printButton].onAction
 	@FXML
 	public void handlePrintButtonAction(ActionEvent event) {
+		ObservableList<Etudiant> etudiantsListe = FXCollections.observableArrayList();
+		Map<String, Object> parameters = new HashMap<String, Object>();
 		if(sessionField.getValue() != null) {
-			try {
-				JasperDesign jasperDesign = JRXmlLoader.load(this.getClass().getResourceAsStream("/com/formaplus/resources/reports/etudiants.jrxml"));
-				/*
-				 * JRDesignQuery query = new JRDesignQuery();
-				 * 
-				 * query.setText("SELECT * FROM etudiants"); jasperDesign.setQuery(query);
-				 */
-				JRBeanCollectionDataSource itemsJRBean = new JRBeanCollectionDataSource(RepositoryFactory.getEtudiantRepository().getAllWhereSession(sessionField.getValue()));
-
-				/* Map to hold Jasper report Parameters */
-				Map<String, Object> parameters = new HashMap<String, Object>();
-				parameters.put("TABLE_DATA", itemsJRBean);
-				parameters.put("ADDRESS", "Agoé-logopé");
-				parameters.put("PHONE", "+228 98647306");
+			
+			if(formationField.getValue() != null) {
+				etudiantsListe = RepositoryFactory.getEtudiantRepository().getAllWhereSessionAndFormation(sessionField.getValue().getIdSession(), formationField.getValue().getIdFormation());
+				parameters.put("FORMATION", formationField.getValue().getLibFormation());
 				parameters.put("SESSION", sessionField.getValue().getLibSession());
-				
-				JasperReport jaspertReport = JasperCompileManager.compileReport(jasperDesign);
-				JasperPrint jasperPrint = JasperFillManager.fillReport(jaspertReport, parameters, new JREmptyDataSource());
-				JasperViewer.viewReport(jasperPrint, false);
-				
-			} catch (JRException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} else {
+				etudiantsListe = RepositoryFactory.getEtudiantRepository().getAllWhereSession(sessionField.getValue());
+				parameters.put("SESSION", sessionField.getValue().getLibSession());
 			}
+			/*
+			 * JRDesignQuery query = new JRDesignQuery();
+			 * 
+			 * query.setText("SELECT * FROM etudiants"); jasperDesign.setQuery(query);
+			 */
 		} else {
-			AlertMessage.showInformation("Veillez selectionner une session.");
+			etudiantsListe = RepositoryFactory.getEtudiantRepository().GetAll();
 		}
+		
+		JRBeanCollectionDataSource itemsJRBean = new JRBeanCollectionDataSource(etudiantsListe);
+
+		parameters.put("TABLE_DATA", itemsJRBean);
+		parameters.put("ADDRESS", "Agoé-logopé");
+		parameters.put("PHONE", "+228 98647306");
+		JasperPrint jasperPrint = Reporting.getJasperPrint("etudiants.jrxml", parameters);
+		JasperViewerFX view = new JasperViewerFX();
+		view.viewReport("Liste des etudiants", jasperPrint, printButton);
 		
 	}
 	@Override

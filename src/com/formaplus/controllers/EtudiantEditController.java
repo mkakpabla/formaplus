@@ -9,8 +9,6 @@ import javafx.scene.control.TextField;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +18,7 @@ import com.formaplus.dao.models.Etudiant;
 import com.formaplus.dao.repositories.EtudiantRepository;
 import com.formaplus.utils.AlertMessage;
 import com.formaplus.utils.LoadView;
+import com.formaplus.utils.Utils;
 import com.formaplus.utils.Validator;
 
 import javafx.collections.FXCollections;
@@ -124,17 +123,6 @@ public class EtudiantEditController extends Controller implements Initializable 
 		sexeField.getSelectionModel().select(e.getSexeEtu());
 		phoneField.setText(String.valueOf(e.getTelEtu()));
 		this.idEtu = e.getIdEtu();
-		try(OutputStream os = new FileOutputStream(new File("etudiant-" + e.getIdEtu() + ".jpg"))) {
-			byte[] content = new byte[1024];
-			int size = 0;
-			while((size = e.getPhotoEtu().read(content)) != -1) {
-				os.write(content, 0, size);
-			}
-			Image image = new Image("file:" + "etudiant-" + e.getIdEtu() + ".jpg", 140, 130, true, true);
-			photoImageView.setImage(image);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		
+		photoImageView.setImage(Utils.getImage(e.getPhotoEtu()));
 	}
 }

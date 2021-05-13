@@ -71,7 +71,7 @@ public class SplashScreenController implements Initializable {
                 public void run() {
                     try {
                         Thread.sleep(1000);
-                        LoadView.showView("Login", "Login");
+                        LoadView.showView("Se Connecter", "Login");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

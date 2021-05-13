@@ -99,7 +99,7 @@ public class Validator {
 	
 	
 	public Validator isAlpha(String value, String message) {
-		Pattern p = Pattern.compile("[\\p{L}]+");
+		Pattern p = Pattern.compile("[\\p{L} ]+");
 		Matcher m = p.matcher(value);
 		if(m.find() && m.group().equals(value)) {
 			

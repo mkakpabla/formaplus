@@ -18,6 +18,7 @@ import com.formaplus.dao.models.Inscription;
 import com.formaplus.dao.repositories.InscriptionRepository;
 import com.formaplus.dao.repositories.RepositoryFactory;
 import com.formaplus.utils.AlertMessage;
+import com.formaplus.utils.JasperViewerFX;
 import com.formaplus.utils.LoadView;
 import com.formaplus.utils.Reporting;
 
@@ -25,6 +26,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import net.sf.jasperreports.engine.JasperPrint;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -106,7 +108,10 @@ public class InscriptionsController implements Initializable {
 			parameters.put("formation", insc.getFormation().getLibFormation() + " " + insc.getSession().getLibSession());
 			parameters.put("insc_num", insc.getFullNum());
 			// Génération du raport
-			Reporting.showReport("fiche_inscription.jrxml", parameters);
+			JasperPrint jasperPrint =  Reporting.getJasperPrint("fiche_inscription.jrxml", parameters);
+			JasperViewerFX view = new JasperViewerFX();
+			view.viewReport("Fiche d'inscription", jasperPrint, printButton);
+			
 		} else AlertMessage.showInformation("Veillez selectionner une inscription");
 		
 		

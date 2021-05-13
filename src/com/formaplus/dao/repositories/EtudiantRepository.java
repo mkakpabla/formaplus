@@ -77,6 +77,34 @@ public class EtudiantRepository implements IRepository<Etudiant> {
 		return etudiants;
 	}
 	
+	public ObservableList<Etudiant> getAllWhereSessionAndFormation(int idSession, int idFormation) {
+		String sql = "select * from full_inscriptions WHERE id_session = ? AND id_forma = ? GROUP By id_etu";
+		ObservableList<Etudiant> etudiants = FXCollections.observableArrayList();
+		try(PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setInt(1, idSession);
+			ps.setInt(2, idFormation);
+			ResultSet rset = ps.executeQuery();
+			while(rset.next()) {
+				Etudiant etudiant = new Etudiant();
+				etudiant.setIdEtu(rset.getInt("id_etu"));
+				etudiant.setNomEtu(rset.getString("nom_etu"));
+				etudiant.setPrenomEtu(rset.getString("prenom_etu"));
+				etudiant.setEmailEtu(rset.getString("email_etu"));
+				etudiant.setSexeEtu(rset.getString("sexe_etu"));
+				etudiant.setTelEtu(rset.getInt("tel_etu"));
+				etudiant.setDateNaissEtu(rset.getDate("date_naiss_etu").toLocalDate());
+				etudiant.setDateAjout(rset.getDate("date_ajout").toLocalDate());
+				etudiant.setPhotoEtu(rset.getBinaryStream("photo_etu"));
+				etudiants.add(etudiant);
+			}
+			return etudiants;
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		return etudiants;
+	}
+	
 
 	@Override
 	public Etudiant GetById(int id) {

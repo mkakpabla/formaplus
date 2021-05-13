@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="formations" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="214e53cc-d496-40d7-ac79-f77b926c9de7">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="etudiants" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="78697071-18f9-4e1b-805d-f2c74057792c">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
@@ -29,16 +29,22 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<subDataset name="ListeFormations" uuid="1e9c0fd3-b758-4d35-8cb1-d542207a39b8">
+	<subDataset name="EtudiantsTable" uuid="6fcb8881-8745-46c6-82a7-70e500597aba">
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
-		<field name="idFormation" class="java.lang.Integer"/>
-		<field name="libFormation" class="java.lang.String"/>
-		<field name="prixFormation" class="java.lang.Double"/>
-		<field name="dureeFormation" class="java.lang.Integer"/>
+		<field name="nomEtu" class="java.lang.String"/>
+		<field name="sexeEtu" class="java.lang.String"/>
+		<field name="emailEtu" class="java.lang.String"/>
+		<field name="telEtu" class="java.lang.Integer"/>
+		<field name="prenomEtu" class="java.lang.String"/>
 	</subDataset>
-	<parameter name="FormationsCollection" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="TABLE_DATA" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="ADDRESS" class="java.lang.String"/>
+	<parameter name="PHONE" class="java.lang.String"/>
+	<parameter name="SESSION" class="java.lang.String"/>
+	<parameter name="FORMATION" class="java.lang.String"/>
+	<parameter name="NAME" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -46,155 +52,192 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="89" splitType="Stretch">
+		<band height="81" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="80" uuid="6903a5a3-fadd-4fcd-83b8-2c4cc4fbfde1"/>
+			</rectangle>
 			<staticText>
-				<reportElement x="0" y="0" width="280" height="30" uuid="71ea9268-ba49-4568-98f6-2898cd6a4b44"/>
-				<textElement verticalAlignment="Middle">
-					<font size="18"/>
+				<reportElement x="0" y="0" width="555" height="30" uuid="3752369e-866b-4034-ad89-08509ba090b1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[FormaPlus]]></text>
+				<text><![CDATA[LISTE DES ETUDIANTS]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="0" y="30" width="100" height="20" uuid="19777f4b-749a-43ec-896e-20a865af2daf"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[Agoé-Logopé]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="50" width="100" height="21" uuid="a73cfa20-db82-4104-b8dc-77732b8eea6d"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[Tel: +228 98647306]]></text>
-			</staticText>
+			<textField>
+				<reportElement x="0" y="30" width="555" height="20" uuid="c5db5f89-06ef-4c40-8cea-f648cd22712a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="53" width="555" height="20" uuid="69dfc17d-3c86-41bd-a1cc-da0793f18d95"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Addresse: " + $P{ADDRESS} + "   Téléphone:   " + $P{PHONE}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
 		<band height="44" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<printWhenExpression><![CDATA[$P{SESSION} != null || $P{FORMATION} != null]]></printWhenExpression>
 			<staticText>
-				<reportElement x="0" y="0" width="555" height="44" uuid="9f899843-c00f-4607-888a-505087c51245"/>
+				<reportElement x="0" y="13" width="60" height="30" uuid="0be53f33-cab8-4206-bd2b-af10c00a7513"/>
 				<textElement verticalAlignment="Middle">
-					<font size="22"/>
+					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[LISTE DES FORMATIONS]]></text>
+				<text><![CDATA[Session:]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="60" y="13" width="150" height="30" uuid="fdbd8f56-e438-4dac-b173-ef3c671956f8"/>
+				<textElement verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{SESSION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="210" y="13" width="80" height="30" uuid="028b195c-080e-49f4-91d0-568716310864">
+					<printWhenExpression><![CDATA[$P{FORMATION} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Formation: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="290" y="13" width="265" height="30" uuid="07dd58d8-8b1a-42d5-94e2-f6f6019f7c2a">
+					<printWhenExpression><![CDATA[$P{FORMATION} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FORMATION}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch"/>
+	</columnHeader>
 	<detail>
-		<band height="249" splitType="Stretch">
+		<band height="60" splitType="Stretch">
 			<componentElement>
-				<reportElement x="0" y="0" width="555" height="150" uuid="a80be90b-7bd2-4935-85b6-7f038bb8d371">
+				<reportElement x="0" y="0" width="555" height="60" uuid="a9896cf2-109d-4f3a-a598-23d5e19677d3">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="ListeFormations" uuid="23a0f174-cda4-490a-809f-e7e8dd066b5c">
-						<dataSourceExpression><![CDATA[$P{FormationsCollection}]]></dataSourceExpression>
+					<datasetRun subDataset="EtudiantsTable" uuid="95a4853b-6c3d-4645-93ec-c98b976c09fa">
+						<dataSourceExpression><![CDATA[$P{TABLE_DATA}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="40" uuid="82f72b3c-2ae3-4b9b-a51a-000f2b442814">
+					<jr:column width="190" uuid="29fad0d9-9988-4432-a2f6-5ce1d0c6ba92">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonne1"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="40" height="30" uuid="abcde48c-f4b9-4720-a310-0bfc4f6a3311">
+								<reportElement x="0" y="0" width="190" height="30" uuid="071bbbb7-f57d-4e40-9e3d-bd969d5565b6">
 									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 								</reportElement>
 								<textElement verticalAlignment="Middle">
 									<font size="12"/>
 									<paragraph leftIndent="10"/>
 								</textElement>
-								<text><![CDATA[N°]]></text>
+								<text><![CDATA[Nom complet]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="40" height="30" uuid="544da668-fdcd-4c99-9463-73d5941bc949">
+								<reportElement x="0" y="0" width="190" height="30" uuid="1fe3b2b8-59cd-465d-902b-e73e396515ca">
 									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 								</reportElement>
 								<textElement verticalAlignment="Middle">
 									<font size="12"/>
 									<paragraph leftIndent="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{idFormation}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{nomEtu} + "  "  + $F{prenomEtu}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="260" uuid="cb6b993d-5039-4e41-bd26-0e5d869c4838">
+					<jr:column width="100" uuid="7219cd3a-65dc-49ca-9134-843241938220">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonne2"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="260" height="30" uuid="35f21f86-1ae0-4f03-aedf-051d6e7bbe2e">
+								<reportElement x="0" y="0" width="100" height="30" uuid="5e76d55c-c92a-40cf-b31d-4b47d981076e">
 									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 								</reportElement>
 								<textElement verticalAlignment="Middle">
 									<font size="12"/>
 									<paragraph leftIndent="10"/>
 								</textElement>
-								<text><![CDATA[Libellé]]></text>
+								<text><![CDATA[Sexe]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="260" height="30" uuid="5f17d400-2c55-438a-a2f8-b06a854c8821">
+								<reportElement x="0" y="0" width="100" height="30" uuid="c05aa995-c697-4b42-8a57-00fadf248373">
 									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 								</reportElement>
 								<textElement verticalAlignment="Middle">
 									<font size="12"/>
 									<paragraph leftIndent="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{libFormation}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{sexeEtu}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="120" uuid="ab78eb4f-7c57-4f43-b9da-75ad9d4aeb31">
+					<jr:column width="140" uuid="4e3118d1-0b98-4158-8ee5-2588c27574ea">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonne3"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="120" height="30" uuid="97ee855c-77e4-4541-9436-230d8127f3a1">
+								<reportElement x="0" y="0" width="140" height="30" uuid="c2ecab55-7b14-486f-915b-2da85afb5cc2">
 									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 								</reportElement>
 								<textElement verticalAlignment="Middle">
 									<font size="12"/>
 									<paragraph leftIndent="10"/>
 								</textElement>
-								<text><![CDATA[Prix]]></text>
+								<text><![CDATA[Email]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="120" height="30" uuid="6c0a892c-96e1-4fd2-82a1-f6d2b6242b53">
+								<reportElement x="0" y="0" width="140" height="30" uuid="ae58963e-57c5-4b78-b780-aa87b7a8ceab">
 									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 								</reportElement>
 								<textElement verticalAlignment="Middle">
 									<font size="12"/>
 									<paragraph leftIndent="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{prixFormation}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{emailEtu}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="135" uuid="2d849dbf-2442-4db5-b42a-d8b9419a0f54">
+					<jr:column width="125" uuid="27e36658-1985-46f7-9488-867489555d01">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonne4"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="135" height="30" uuid="330d5f85-76b7-4255-a6a5-b18291730172">
+								<reportElement x="0" y="0" width="125" height="30" uuid="7ee89c89-bfce-4363-a63e-6b9c27d98029">
 									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 								</reportElement>
 								<textElement verticalAlignment="Middle">
 									<font size="12"/>
 									<paragraph leftIndent="10"/>
 								</textElement>
-								<text><![CDATA[Durée]]></text>
+								<text><![CDATA[Téléphone]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="135" height="30" uuid="7e5d2ceb-7c38-40b3-b5b1-65df0b75ffa3">
+								<reportElement x="0" y="0" width="125" height="30" uuid="2d9ff70e-c38e-467b-a172-0365ddd97c8e">
 									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 								</reportElement>
 								<textElement verticalAlignment="Middle">
 									<font size="12"/>
 									<paragraph leftIndent="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{dureeFormation}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{telEtu}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

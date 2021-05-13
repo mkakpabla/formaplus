@@ -8,12 +8,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.formaplus.dao.models.Utilisateur;
 import com.formaplus.dao.repositories.RepositoryFactory;
 import com.formaplus.dao.repositories.UtilisateurRepository;
 import com.formaplus.utils.AlertMessage;
+import com.formaplus.utils.JasperViewerFX;
 import com.formaplus.utils.LoadView;
 import com.formaplus.utils.Reporting;
 
@@ -24,6 +27,8 @@ import javafx.event.ActionEvent;
 
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.TableView;
 
@@ -121,7 +126,11 @@ public class UtilisateursController  implements Initializable {
 	
 	@FXML
     public void handlePrintButton(ActionEvent event) {
-		Reporting.showReport("UsersList", "list_users", tblListeUtilisateurs.getItems());
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("UsersList", new JRBeanCollectionDataSource(tblListeUtilisateurs.getItems()));
+		JasperPrint jasperPrint = Reporting.getJasperPrint("utilisateurs.jrxml", parameters);
+		JasperViewerFX view = new JasperViewerFX();
+		view.viewReport("Liste des utilisateurs", jasperPrint, printButton);
     }
 	
 	public void loadData() {

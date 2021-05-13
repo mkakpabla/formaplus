@@ -86,6 +86,27 @@ public class UtilisateurRepository implements IRepository<Utilisateur> {
 		}
 		return null;
 	}
+	
+	public Utilisateur login(String login) {
+		try(PreparedStatement stm = connection.prepareStatement("SELECT * FROM utilisateurs where login_utr = ?")) {
+			stm.setString(1, login);
+			ResultSet resultSet = stm.executeQuery();
+			if(resultSet.next()) {
+				Utilisateur u = new Utilisateur();
+				u.setIdUtr(resultSet.getInt(1));
+				u.setNomCompUtr(resultSet.getString("nom_comp_utr"));
+				u.setLoginUtr(resultSet.getString("login_utr"));
+				u.setMdpUtr(resultSet.getString("mdp_utr"));
+				u.setRoleUtr(resultSet.getString("role_utr"));
+				return u;
+			}
+			
+		} catch (SQLException e) {
+			System.err.println(e);
+			
+		}
+		return null;
+	}
 
 	@Override
 	public boolean Save(Utilisateur obj) {
@@ -102,12 +123,23 @@ public class UtilisateurRepository implements IRepository<Utilisateur> {
 				e.printStackTrace();
 			}
 		} else {
-			try(PreparedStatement pstm = connection.prepareStatement("UPDATE utilisateurs SET nom_comp_utr = ?, login_utr = ?, mdp_utr = ?, role_utr = ? WHERE id_utr = ?")) {
+			String sql = "UPDATE utilisateurs SET nom_comp_utr = ?, login_utr = ?, role_utr = ? ";
+			if(!obj.getMdpUtr().isEmpty())  sql += " , mdp_utr = ?";
+			
+			sql += " WHERE id_utr = ?";
+			try(PreparedStatement pstm = connection.prepareStatement(sql)) {
 				pstm.setString(1, obj.getNomCompUtr());
 				pstm.setString(2, obj.getLoginUtr());
-				pstm.setString(3, obj.getMdpUtr());
-				pstm.setString(4, obj.getRoleUtr());
-				pstm.setInt(5, obj.getIdUtr());
+				if(!obj.getMdpUtr().isEmpty()) {
+					pstm.setString(3, obj.getRoleUtr());
+					pstm.setString(4, obj.getMdpUtr());
+					pstm.setInt(5, obj.getIdUtr());
+				} else {
+					pstm.setString(3, obj.getRoleUtr());
+					pstm.setInt(4, obj.getIdUtr());
+				}
+				
+				
 				return pstm.executeUpdate() > 0;
 			} catch (Exception e) {
 				

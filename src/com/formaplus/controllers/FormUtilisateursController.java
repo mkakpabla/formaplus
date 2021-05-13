@@ -19,6 +19,7 @@ import com.formaplus.dao.repositories.UtilisateurRepository;
 import com.formaplus.utils.AlertMessage;
 import com.formaplus.utils.Validator;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 
@@ -44,28 +45,54 @@ public class FormUtilisateursController extends Controller implements Initializa
 	public void handleSaveUtilisateurs(ActionEvent event) {
 		Validator validator = new Validator();
 		validator.isAlpha(txtName.getText(), "Le nom est obligoire")
-				.isAlphaNum(txtLogin.getText(), "L'identifient est obligatoire")
-				.notEmpty(txtPassword.getText(), "Le mot de passe est obligatoire");
-		
-		if(validator.isValid()) {
-			UtilisateurRepository repo = new UtilisateurRepository();
-			Utilisateur u = new Utilisateur();
-			u.setIdUtr(idUtr);
-			u.setLoginUtr(txtLogin.getText());
-			u.setNomCompUtr(txtName.getText());
-			u.setMdpUtr(txtPassword.getText());
-			u.setRoleUtr(comboBoxRole.getSelectionModel().getSelectedItem().toString()); 
-			if(repo.Save(u)) {
-				AlertMessage.showInformation("Opération réussie", "L'utilisateur a été sauvegarder avec success");
-				txtLogin.clear();
-				txtName.clear();
-				txtPassword.clear();
-				comboBoxRole.getSelectionModel().select(0);
+				.isAlphaNum(txtLogin.getText(), "L'identifient est obligatoire");
 				
+		
+		
+		if(this.idUtr > 0) {
+			if(validator.isValid()) {
+				UtilisateurRepository repo = new UtilisateurRepository();
+				Utilisateur u = new Utilisateur();
+				u.setIdUtr(idUtr);
+				u.setLoginUtr(txtLogin.getText());
+				u.setNomCompUtr(txtName.getText());
+				
+				if(!txtPassword.getText().equals("")) u.setMdpUtr(BCrypt.withDefaults().hashToString(12, txtPassword.getText().toCharArray()));
+				u.setRoleUtr(comboBoxRole.getSelectionModel().getSelectedItem().toString()); 
+				if(repo.Save(u)) {
+					AlertMessage.showInformation("Opération réussie", "L'utilisateur a été sauvegarder avec success");
+					txtLogin.clear();
+					txtName.clear();
+					txtPassword.clear();
+					comboBoxRole.getSelectionModel().select(0);
+				}
+			} else {
+				AlertMessage.showWarning(validator.getErrors().get(0));
 			}
 		} else {
-			AlertMessage.showWarning(validator.getErrors().get(0));
+			validator.notEmpty(txtPassword.getText(), "Le mot de passe est obligatoire");
+			if(validator.isValid()) {
+				UtilisateurRepository repo = new UtilisateurRepository();
+				Utilisateur u = new Utilisateur();
+				u.setIdUtr(idUtr);
+				u.setLoginUtr(txtLogin.getText());
+				u.setNomCompUtr(txtName.getText());
+				u.setMdpUtr(BCrypt.withDefaults().hashToString(12, txtPassword.getText().toCharArray()));
+				u.setRoleUtr(comboBoxRole.getSelectionModel().getSelectedItem().toString()); 
+				if(repo.Save(u)) {
+					AlertMessage.showInformation("Opération réussie", "L'utilisateur a été sauvegarder avec success");
+					txtLogin.clear();
+					txtName.clear();
+					txtPassword.clear();
+					comboBoxRole.getSelectionModel().select(0);
+					
+				}
+			} else {
+				AlertMessage.showWarning(validator.getErrors().get(0));
+			}
 		}
+		
+		
 		
 	}
 	
@@ -74,7 +101,6 @@ public class FormUtilisateursController extends Controller implements Initializa
 		Utilisateur utilisateur = (Utilisateur)obj;
 		txtName.setText(utilisateur.getNomCompUtr());
 		txtLogin.setText(utilisateur.getLoginUtr());
-		txtPassword.setText(utilisateur.getMdpUtr());
 		if(utilisateur.getRoleUtr().equals(Role.ADMIN.toString())) {
 			comboBoxRole.getSelectionModel().select(Role.ADMIN);
 		} else {

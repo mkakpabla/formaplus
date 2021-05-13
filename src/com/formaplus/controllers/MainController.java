@@ -1,15 +1,19 @@
 package com.formaplus.controllers;
 
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import com.formaplus.utils.LoadView;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
-public class MainController {
+public class MainController implements Initializable {
 	
 	@FXML
     private BorderPane borderPane;
@@ -31,6 +35,11 @@ public class MainController {
     
     @FXML
     private AnchorPane content;
+    
+    @Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+    	setCenterContent("Home");
+	}
 
     @FXML
     public void handleBtnEtudiantClick(ActionEvent event) {
@@ -73,5 +82,7 @@ public class MainController {
     	parent.setPrefWidth(content.getWidth());
     	borderPane.setCenter(parent);
     }
+
+	
 
 }

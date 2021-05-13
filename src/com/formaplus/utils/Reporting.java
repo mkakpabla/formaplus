@@ -3,6 +3,7 @@ package com.formaplus.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+
 import javafx.collections.ObservableList;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -31,7 +32,7 @@ public class Reporting {
 			// File("C:\\Users\\amitk\\Desktop\\JASPER\\JasperReport_A4.jrxml"));
 
 			JasperDesign jasperDesign = JRXmlLoader.load(Reporting.class
-					.getResourceAsStream("/com/formaplus/resources/reports/" + reportFileName + ".jrxml"));
+					.getResourceAsStream("/com/formaplus/resources/jrxml/" + reportFileName + ".jrxml"));
 
 			/* compiling jrxml with help of JasperReport class */
 			JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
@@ -55,15 +56,32 @@ public class Reporting {
 
 	public static void showReport(String reportName, Map<String, Object> parameters) {
 		try {
-			JasperDesign jasperDesign = JRXmlLoader.load(Reporting.class.getResourceAsStream("/com/formaplus/resources/reports/" + reportName));
+			JasperDesign jasperDesign = JRXmlLoader.load(Reporting.class.getResourceAsStream("/com/formaplus/resources/jrxml/" + reportName));
 			JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
 			JasperViewer.viewReport(jasperPrint, false);
-			
+			//new JasperViewerFX().viewReport("JRBeanCollectionDataSource example", jasperPrint);
 		} catch (JRException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static JasperPrint getJasperPrint(String reportName, Map<String, Object> parameters) {
+		try {
+			parameters.put("ADDRESS", "Agoé-Logopé");
+			parameters.put("PHONE", "+228 98647306");
+			parameters.put("NAME", "CENTRE DE FORMATION");
+			JasperDesign jasperDesign = JRXmlLoader.load(Reporting.class.getResourceAsStream("/com/formaplus/resources/jrxml/" + reportName));
+			JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
+			//JasperViewer.viewReport(jasperPrint, false);
+			return jasperPrint;
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

@@ -6,14 +6,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.formaplus.dao.models.Formation;
 import com.formaplus.dao.repositories.FormationRepository;
 import com.formaplus.dao.repositories.RepositoryFactory;
 import com.formaplus.utils.AlertMessage;
+import com.formaplus.utils.JasperViewerFX;
 import com.formaplus.utils.LoadView;
 import com.formaplus.utils.Reporting;
 
@@ -101,7 +106,11 @@ public class FormationsController implements Initializable {
 	
 	@FXML
     public void handlePrintFormationButtonAction(ActionEvent event) {
-		Reporting.showReport("FormationsCollection", "formations", formationsTable.getItems());
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("FormationsCollection", new JRBeanCollectionDataSource(formationsTable.getItems()));
+		JasperPrint jasperPrint = Reporting.getJasperPrint("formations.jrxml", parameters);
+		JasperViewerFX view = new JasperViewerFX();
+		view.viewReport("Liste des formations", jasperPrint, addFormationButton);
     }
 	
 	
