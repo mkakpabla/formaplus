@@ -10,13 +10,13 @@
    <children>
       <Line endX="224.0" layoutX="312.0" layoutY="237.0" startX="-315.0" stroke="#2262ce" strokeWidth="6.0" />
       <Line endX="-100.0" endY="278.0" layoutX="171.0" layoutY="15.0" startX="-100.0" startY="-15.0" stroke="#2262ce" strokeWidth="6.0" />
-      <Label layoutX="101.0" layoutY="70.0" text="FORMACENTER" textFill="#2262ce">
+      <Label layoutX="101.0" layoutY="70.0" text="FORMAPLUS" textFill="#2262ce">
          <font>
             <Font name="Century Gothic Bold" size="36.0" />
          </font>
       </Label>
       <Label layoutX="223.0" layoutY="253.0" text="2021 @ All Rights Reserved Powered By Michel AKPABLA" />
-      <Label layoutX="104.0" layoutY="116.0" text="Version 1.0" textFill="#2262ce">
+      <Label layoutX="104.0" layoutY="116.0" text="Version 1.1.0" textFill="#2262ce">
          <font>
             <Font name="Century Gothic Bold" size="16.0" />
          </font>

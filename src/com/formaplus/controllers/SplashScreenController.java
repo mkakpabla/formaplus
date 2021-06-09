@@ -42,6 +42,7 @@ public class SplashScreenController implements Initializable {
             Connection connection = Db.getConnection();
             if(connection == null) {
             	AlertMessage.showInformation("Error", "Imposible de se connecter à la base de données");
+            	System.exit(0);
             }
         });
 
@@ -50,7 +51,6 @@ public class SplashScreenController implements Initializable {
             Platform.runLater(() -> {
             	lblLoadingg.setText(message[0]);
             	s.setProgress(0.6);
-            	
             });
             try {
                 Thread.sleep(1000);

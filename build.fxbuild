@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ASCII"?>
 <anttasks:AntTask xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:anttasks="http://org.eclipse.fx.ide.jdt/1.0" buildDirectory="${project}/build">
   <deploy packagingFormat="exe">
-    <application name="AutoPlus" mainclass="com.formaplus.Main" version="1.0.0"/>
-    <info title="FormaCenter" vendor="com.formacenter"/>
+    <application name="AutoPlus" mainclass="com.formaplus.Main" version="1.2.0"/>
+    <info title="FormaPlus" vendor="com.formaplus"/>
   </deploy>
   <signjar/>
 </anttasks:AntTask>

@@ -2,9 +2,13 @@ package com.formaplus.controllers;
 
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
@@ -14,7 +18,7 @@ import com.formaplus.dao.repositories.FormationRepository;
 import com.formaplus.utils.AlertMessage;
 
 
-public class FormationDialogController extends Controller {
+public class FormationDialogController extends Controller implements Initializable {
 	
 	private int idFormation = 0;
 	
@@ -38,25 +42,28 @@ public class FormationDialogController extends Controller {
 	private Button saveFormationButton;
 	
 	
+	
 
 	// Event Listener on Button[#saveFormationButton].onAction
 	@FXML
 	public void handleSaveFormationButtonAction(ActionEvent event) {
-	    if (this.validate()) {
-	    	Formation formation = new Formation();
+
+		if (this.validate()) {
+			Formation formation = new Formation();
 			formation.setIdFormation(idFormation);
 			formation.setLibFormation(libFormationField.getText());
 			formation.setDureeFormation(Integer.parseInt(dureeFormationField.getText()));
 			formation.setPrixFormation(Double.parseDouble(prixFormationField.getText()));
-	    	if(new FormationRepository().Save(formation)) {
-	    		if(idFormation == 0) {
-	    			AlertMessage.showInformation("Les informations de la formation ont été mis a jour");
-	    		} else {
-	    			AlertMessage.showInformation("Formation sauvegarder avec success");
-	    		}
-				
+			if (new FormationRepository().Save(formation)) {
+				if (idFormation == 0) {
+					AlertMessage.showInformation("Les informations de la formation ont été mis a jour");
+				} else {
+					AlertMessage.showInformation("Formation sauvegarder avec success");
+				}
+
 			}
-	    }
+		}
+
 	}
 	
 	@Override
@@ -66,6 +73,13 @@ public class FormationDialogController extends Controller {
 		dureeFormationField.setText(String.valueOf(formation.getDureeFormation()));
 		prixFormationField.setText(String.valueOf(formation.getPrixFormation()));
 		idFormation = formation.getIdFormation();
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		// TODO Auto-generated method stub
+		
+		
 	}
 	
 	
